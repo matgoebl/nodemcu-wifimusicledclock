@@ -37,7 +37,7 @@ handle_http = function(c,m,u,p)
 
  if u == "/" then u="/index.html" end
 
- if u:match("%.html$") then
+ if u:match("^/%w*%.%w*$") then
   c:send("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n")
   local o=coroutine.create(sendfile)
   c:on("sent", function(c) coroutine.resume(o,true) end)
