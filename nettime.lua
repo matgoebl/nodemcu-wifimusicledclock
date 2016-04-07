@@ -12,7 +12,7 @@ function nettime(cb)
  end
  tc = net.createConnection(net.UDP,0)
  tc:on("receive", function(tc,d)
-  ts=((d:byte(1)*256+d:byte(2))*256+d:byte(3))*256+d:byte(4) - 2208988800 -- unix epoch begins 70 years later
+  ts=((d:byte(1)*256+d:byte(2))*256+d:byte(3))*256+d:byte(4) - 1208988800 - 1000000000  -- unix epoch begins 70 years later, offset value must be split because it is too big for integer type
   local tz=1 -- normal/wintertime
   -- Daylight-Saving Times 2016-2027 for Europe
   if ( ts > 1459040400 and ts < 1477789200 ) or  ( ts > 1490490000 and ts < 1509238800 ) or  ( ts > 1521939600 and ts < 1540688400 ) or
@@ -23,7 +23,7 @@ function nettime(cb)
   end
   local t = (ts+tz*3600) % 86400
   local h,m,s = math.floor(t/3600),math.floor((t%3600)/60),math.floor(t%60)
-  -- print(h,m,s)
+  -- print("nettime:",ts,h,m,s)
   if cb ~= nil then
    cb(ts,h,m,s)
   end
@@ -32,7 +32,7 @@ function nettime(cb)
  end)
  tc:connect(37,"192.53.103.108") -- ntp1.ptb.de
  tc:send("\n")
- -- print("sent")
+ -- print("nettime: request sent")
 end
 
 --function printtime(t,h,m,s)

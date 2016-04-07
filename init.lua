@@ -15,8 +15,8 @@ gpio.mode(key2_pin,gpio.INPUT,gpio.PULLDOWN)
 
 led_pin=4     -- GPIO2, led to Vss
 
+cfg={}
 pcall(function() dofile("config.lua") end)
-cfg=cfg or {}
 
 -- Start telnet/http service on port 8266
 --print("start telnet/httpd")

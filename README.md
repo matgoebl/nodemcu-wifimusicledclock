@@ -23,11 +23,12 @@ Hardware
 Software
 --------
 - [NodeMCU](https://github.com/nodemcu/nodemcu-firmware), tested with `NodeMCU 1.5.1 build 20160121 powered by Lua 5.1.4 on SDK 1.5.1(e67da894)`
+- [luatool with binary mode via network](https://github.com/matgoebl/luatool)
 - The *.lua files here, starts up with init.lua
 
 ### Install
-    make bootstrap
-    make install
+    make ESPDEV=/dev/ttyUSB0 format bootstrap reset
+    make ESPCONN=esp:8266 install
 
 
 User Interface

@@ -1,13 +1,22 @@
 ESPCONN?=esp:8266
 ESPDEV?=/dev/ttyUSB0
+ESPAUTH?=""
 
 install:
-	for i in handle_http_basic.lua rgb.lua melody.lua nettime.lua clock.lua modes.lua twokeys.lua cfgedit.lua ;do luatool.py --ip $(ESPCONN) -f $$i -v -W; done
-	for i in autostart.lua compile.lua;do luatool.py --ip $(ESPCONN) -f $$i -v -W; done
-	luatool.py --ip $(ESPCONN) -d -v -W -f index.html -B
+	#for i in  twokeys.lua cfgedit.lua autostart.lua compile.lua; do \
+	# luatool.py --ip $(ESPCONN) --auth "$(ESPAUTH)" --verbose --strip-whitespace --src $$i || exit 1; done
+	luatool.py --ip $(ESPCONN) --auth "$(ESPAUTH)" --verbose --binary --src index.html
 
 bootstrap:
-	nodemcu-uploader.py --port=$(ESPDEV) upload init.lua config.lua
+	#nodemcu-uploader.py --port=$(ESPDEV) upload init.lua config.lua
+	for i in init.lua config.lua; do luatool.py --port $(ESPDEV) --baud 9600 --verbose --strip-whitespace --src $$i || exit 1; done
+
+reset:
+	luatool.py --port $(ESPDEV) --baud 9600 --verbose --restart
+
+format:
+	luatool.py --port $(ESPDEV) --baud 9600 --verbose --execute "file.format()"
+	sleep 60
 
 flash_nodemcu_dev:
 	esptool.py --port=$(ESPDEV) write_flash 0x00000 0x00000.bin
