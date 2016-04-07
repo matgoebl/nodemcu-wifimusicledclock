@@ -12,6 +12,15 @@ a.palettec { display:inline-block; width:46px; height:40px; margin:0 4px 4px 0; 
  <li>Yellow LED <button onclick='espAPI("io?n=3&s=0")'>on</button> <button onclick='espAPI("io?n=3&s=f")'>off</button>
  <li>Blue LED <button onclick='espAPI("io?n=4&s=0")'>on</button> <button onclick='espAPI("io?n=4&s=1")'>off</button>
 -->
+<li>Mode:
+ <button onclick='espAPI("mode?m=1")'>Music</button>
+ <button onclick='espAPI("mode?m=2")'>RGB Running Light</button>
+ <button onclick='espAPI("mode?m=3")'>Clock</button>
+ <button onclick='espAPI("mode?m=0")'>IoT</button>
+<li>Function:
+ <button onclick='espAPI("mode?n=1")'>Next</button>
+ <button onclick='espAPI("mode?n=-1")'>Prev</button>
+ <button onclick='espAPI("mode?n=0")'>Special</button>
 <li>Buzzer <button onclick='espAPI("melody?s=125&p=20&m=A")'>beep</button>
 <li>Melodies:
 <button onclick='espAPI("melody?s=125&p=20&m=A4A4A4F3c1.A4F3c1A8.e4e4e4f3c1,XG4F3c1A8.a4A3A1a4xg2g.xffxf2z2XA2xd4d2xc2.c1B1c2z2F1XG4F3A1.c4A3c1e8.a4A3A1a4xg2g,xffxf2z2XA2xd4d2xc2.cBc2z2FXG4F3c.A4F3cA8.&b="+(document.getElementById("melody_blink").checked?"1":"0"))'>Imperial March</button>
@@ -51,6 +60,7 @@ for (var i=0; i < 24; i++) {document.writeln("<div class='picker' id='"+i+"' onc
 <option>ssid
 <option>key
 <option>trigurl
+<option>auth
 </select>
 <input id='cfgval' value='' size=30>
 <button onclick='espAPI("cfg?k="+document.getElementById("cfgkey").value+"&v="+encodeURIComponent(document.getElementById("cfgval").value))'>save</button>

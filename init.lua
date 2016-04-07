@@ -29,6 +29,10 @@ cfg=cfg or {}
   c:on("disconnection", function(c) node.output(nil) end)
   c:on("receive", function(c,d)
    collectgarbage()
+   if cfg.auth and sv_telnet == false and d:find(cfg.auth,1,true) == nil then
+    c:close()
+    return
+   end
    if handle_http ~= nil and sv_telnet == false and d ~= nil then
     local m,u,q=d:match("^([^ ]*)[ ]+([^? ]*)\??([^ ]*)[ ]+[Hh][Tt][Tt][Pp]/")
     if m ~= nil and u ~= nil then
