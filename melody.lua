@@ -49,62 +49,57 @@ tonecolor={
   Z = "000000000000000",
 }
 
-playco=nil
-function playctrl(o,s,p,m,b)
- local r,d=coroutine.resume(o,s,p,m,b)
- if r and d then 
-  tmr.alarm(beep_tmr, d, 0, function() playctrl(o,true) end)
- end
-end
 
-function play(s,p,m,b)
- if playco then
-  coroutine.resume(playco,false)
- end
- if not s then return end
- playco=coroutine.create(player)
- playctrl(playco,s,p,m,b)
-end
-
-function player(s,p,m,b)
+function play(s,p,m,b,i,o)
+ -- s: tone length  p: inter-tone pause  m: music string in abc format  b: visualize tones with rgb leds
+ tmr.stop(beep_tmr)
  status.playing=true
- gpio.mode(beep_pin,gpio.OUTPUT)
- local i=0
- for t,q,v in m:gmatch("([xX]?%a[vV]?)(/?)(%d*) *") do
- -- print(t,q,v)
-  if v and v~="" then
-   if q=="/" then
-    d=s/v
-   else
-    d=s*v
-   end
-  else
-   d=s
-  end
-  local f=tones[t]
-  if not f then f=0 end
-  if f > 0 then
-   pwm.setup(beep_pin,f,512)  
-   pwm.start(beep_pin)  
-  end
-  if b == "1" then
-   local tc=tonecolor[t:upper()]
-   local p="000"
-   if tc ~= nil then
-    rgbset(nil,{pattern=p:rep(i%2)..tc,ms=0})
-    i=i+1
-   end
-  end
-  if not coroutine.yield(d) then break end
+ if i == nil then  -- init
+  gpio.mode(beep_pin,gpio.OUTPUT)
+  i=1  -- tone number, for blinking
+  o=1  -- offset within music string
+ else
   pwm.stop(beep_pin)
---  if b == "1" then
---   rgbset(nil,{pattern="000",ms=0})
---  end
-  if not coroutine.yield(p) then break end
  end
- pwm.stop(beep_pin)  
- gpio.mode(beep_pin,gpio.INPUT)  
- status.playing=false
+ if m==nil then m="" end
+ local t,q,v,z=m:match("^([xX]?%a[vV]?)(/?)(%d*)([^a-zA-Z0-9]*)",o)
+ if t == nil then  -- end of melody
+  pwm.stop(beep_pin)  
+  gpio.mode(beep_pin,gpio.INPUT)  
+  status.playing=false
+  return
+ end
+ -- print(t,q,v)
+ local d=s
+ if v and v~="" then
+  if q=="/" then
+   d=s/v
+  else
+   d=s*v
+  end
+ end
+ local f=tones[t]
+ if not f then f=0 end
+ if f > 0 then
+  pwm.setup(beep_pin,f,512)  
+  pwm.start(beep_pin)  
+ end
+ -- print(f,d)
+ if b == "1" then
+  local tc=tonecolor[t:upper()]
+  local p="000"
+  if tc ~= nil then
+   rgbset(nil,{pattern=p:rep(i%2)..tc,ms=0})
+   i=i+1
+  end
+ end
+ o=o+#t+#q+#v+#z
+ tmr.alarm(beep_tmr, d, 0, function()
+  pwm.stop(beep_pin)
+  tmr.alarm(beep_tmr, p, 0, function()
+   play(s,p,m,b,i,o)
+  end)
+ end)
 end
 
 url_handlers["/melody"] = function(c,p)
