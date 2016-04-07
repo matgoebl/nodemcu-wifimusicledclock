@@ -1,0 +1,235 @@
+<!DOCTYPE html><html><head><title>ESP8266</title><meta charset="UTF-8"/>
+<style>
+.picker    { display:block; position:relative; float:left; margin-right:10px; margin-top:10px; width:50px; height:50px; border:1px; border-color:#000000; border-style:solid; }
+.palette   { display:none;  position:absolute; width:220px; height:auto; padding:4px 0 0 4px; border:4px solid #ccc; bottom:45px; left:8px; background:#ffffff; box-shadow: 2px 2px 10px #ccc; }
+a.palettec { display:inline-block; width:46px; height:40px; margin:0 4px 4px 0; }
+</style>
+</head>
+<body bgcolor=#FFFFFF link=#0000FF alink=#0000FF vlink=#0000FF>
+<h1><font face='arial,helvetica'>ESP8266</font></h1>
+<UL>
+<!--
+ <li>Yellow LED <button onclick='espAPI("io?n=3&s=0")'>on</button> <button onclick='espAPI("io?n=3&s=f")'>off</button>
+ <li>Blue LED <button onclick='espAPI("io?n=4&s=0")'>on</button> <button onclick='espAPI("io?n=4&s=1")'>off</button>
+-->
+<li>Buzzer <button onclick='espAPI("melody?s=125&p=20&m=A")'>beep</button>
+<li>Melodies:
+<button onclick='espAPI("melody?s=125&p=20&m=A4A4A4F3c1.A4F3c1A8.e4e4e4f3c1,XG4F3c1A8.a4A3A1a4xg2g.xffxf2z2XA2xd4d2xc2.c1B1c2z2F1XG4F3A1.c4A3c1e8.a4A3A1a4xg2g,xffxf2z2XA2xd4d2xc2.cBc2z2FXG4F3c.A4F3cA8.&b="+(document.getElementById("melody_blink").checked?"1":"0"))'>Imperial March</button>
+<button onclick='espAPI("melody?s=125&p=20&m=C3C1D4C4F4E8.C3C1D4C4G4F8.C3C1c4A4F4E4D8.XA3XA1A4F4G4F8&b="+(document.getElementById("melody_blink").checked?"1":"0"))'>Happy Birthday</button>
+<button onclick='espAPI("melody?s=125&p=20&m=E4.G3E2EA2.E2D2.E4.B3E2Ec2.B2G2.E2B2.e2ED2DBV2.XF2E2&b="+(document.getElementById("melody_blink").checked?"1":"0"))'>AxelF</button>
+<input id='melody_blink' type='checkbox' unchecked>blink
+<BR>Melody: <input id='melody' value='CDEFGABc' size=20>
+<button onclick='espAPI("melody?s=125&p=20&m="+document.getElementById("melody").value+"&b="+(document.getElementById("melody_blink").checked?"1":"0"))'>play</button>
+
+<!--
+<li>Buzzer Freq: <input id='freq' value='440' size=3> ms: <input id='ms' value='300' size=4> <button onclick='espAPI("beep?freq="+document.getElementById("freq").value+"&ms="+document.getElementById("ms").value)'>beep</button>
+ <li>Wifi Pause: ms: <input id='wms' value='10000' size=5> <button onclick='espAPI("wifipause?ms="+document.getElementById("wms").value)'>pause</button>
+ <li><a href='/vdd'>VDD</a> <button onclick='espAPI("vdd?measure=1")'>measure</button>
+-->
+
+<li>RGB LEDs:
+ms: <input id='speed' value='400' size=4 onchange="updateRgb()">
+step: <input id='step' value='1' size=2 onchange="updateRgb()">
+
+<!-- input id="step_slider" type ="range" min ="-10" max="10" step ="1" value="1" xoninput onchange='document.getElementById("step").value=document.getElementById("step_slider").value;updateRgb(null,true)'/ -->
+
+<BR>Speed: <input id="speed_slider" type ="range" min ="-200" max="200" step ="20" value="0" xoninput onchange='var s=document.getElementById("speed_slider").value; if(s==0) {document.getElementById("step").value=0;} else {document.getElementById("step").value=Math.abs(s)/s;document.getElementById("speed").value=Math.abs(s);} updateRgb(null,true)'/>
+<button onclick='var id=document.getElementById("speed"); if(id.value==0) id.value=30; updateRgb()'>run</button>
+<button onclick='document.getElementById("speed").value=0; updateRgb()'>stop</button>
+<button onclick='espAPI("rgb?ms=0&pattern=000")'>blank</button>
+<input id='use_pwm' type='checkbox' unchecked>PWM
+<BR>Manual Position: <input id="pos_slider" type ="range" min ="0" max="239" step ="1" value="1" oninput='if(!espAPI_pending) espAPI("rgb?ms=0&pos="+document.getElementById("pos_slider").value)'/>
+<BR>
+<script type="text/javascript">
+//for (var i=0; i < 300; i++) {document.writeln("<div class='picker' id='"+i+"' onclick='buildPalette(\""+i+"\")'></div>");}
+for (var i=0; i < 24; i++) {document.writeln("<div class='picker' id='"+i+"' onclick='buildPalette(\""+i+"\")'></div>");}
+</script>
+
+<!-- <li>Measure VDD: measure time: <input id='mms' value='1000' size=5> <button onclick='espAPI("status?measure="+document.getElementById("mms").value,true)'>measure</button> -->
+<li style="clear:both; padding-top:30px">Config: 
+<select id="cfgkey">
+<option>ssid
+<option>key
+<option>trigurl
+</select>
+<input id='cfgval' value='' size=30>
+<button onclick='espAPI("cfg?k="+document.getElementById("cfgkey").value+"&v="+encodeURIComponent(document.getElementById("cfgval").value))'>save</button>
+<li>Reset: <button onclick='espAPI("reset?",true)'>reset</button>
+
+</ul>
+
+
+<h3 style="clear:both; padding-top:10px">Status</h3>
+<button onclick='update()'>update</button>
+<pre><span id="status">(unknown yet)</span></pre>
+
+
+
+<script type="text/javascript">
+
+ var espAPI_pending=false
+ function espAPI(url,updateStatus) {
+   document.getElementById("apiurl").firstChild.data=url;
+   var http = new XMLHttpRequest();
+   http.open("GET", url+"&"+Date.now(), true);
+   espAPI_pending=true;
+   http.onreadystatechange = function () {
+     if (http.readyState == 4) {
+       espAPI_pending=false;
+     }
+   }
+   http.send();
+   if(updateStatus) {
+    document.getElementById("status").style.color="#aaaaaa";
+    setTimeout(update,10000);
+   }
+ }
+
+function updateRgb(params,fast) {
+ if(fast&&espAPI_pending) return;
+ use_pwm= document.getElementById("use_pwm").checked ? "1" : "0";
+ if(params==null) params=""
+ espAPI("rgb?ms="+document.getElementById("speed").value+"&step="+document.getElementById("step").value+"&pwm="+use_pwm+params);
+}
+
+
+ function update() {
+   var id = document.getElementById("status");
+   id.style.color="#888888"
+   var http = new XMLHttpRequest();
+   http.open("GET", "status?_="+Date.now(), true);
+   http.onreadystatechange = function () {
+     if (http.readyState == 4) {
+       data=JSON.parse(http.responseText);
+       id.firstChild.data = JSON.stringify(data,null,2);
+       id.style.color="#000000"
+//       setTimeout(update,10000);
+     }
+   }
+   http.send();
+ }
+
+
+
+ window.onload = function() {
+   update();
+ }
+
+
+
+
+
+
+// Color Picker
+// Source: http://www.heimpel.de/de/index.php?k=5
+
+//Farb-Set als Array
+var pCol = new Array();
+pCol[1]  = '#FF0000'; 
+pCol[2]  = '#00FF00';
+pCol[3]  = '#0000FF';
+pCol[4]  = '#FFFF00';
+pCol[5]  = '#00FFFF';
+pCol[6]  = '#FF00FF';
+pCol[7]  = '#800000'; 
+pCol[8]  = '#008000'; 
+pCol[9]  = '#000080'; 
+pCol[10] = '#808000'; 
+pCol[11] = '#008080'; 
+pCol[12] = '#800080'; 
+pCol[13] = '#000000';
+pCol[14] = '#101010';
+pCol[15] = '#808080';
+pCol[16] = '#ffffff';
+
+//Palette aufrufen
+function buildPalette(div) {
+
+    //Falls palette schon erzeugt, Funktion abbrechen
+    if ( document.getElementById("palette"+div) != null ) { 
+        document.getElementById("palette"+div).style.display = "none"; //FF
+        document.getElementById(div).removeChild(document.getElementById("palette"+div)); 
+        return false; 
+    }
+
+    //absolutes div dynamische erzeugen, innerhalb relativem div "pickerdiv"
+    var crDiv = document.createElement('div'); 
+    document.getElementById(div).appendChild(crDiv);
+    crDiv.id = 'palette'+div; 
+    crDiv.className = 'palette';
+    
+    //erzeugtes div "palette" sichtbar stellen
+    document.getElementById("palette"+div).style.display = "block";
+    
+    //style-Werte für den unsäglichen Internet-Explorer nachführen (unvollständig)
+    if(document.all) {
+    document.getElementById("palette"+div).style.position = "absolute"; //IE 
+    document.getElementById("palette"+div).style.top      = "-112px";   //IE 
+    document.getElementById("palette"+div).style.left     = "18px";     //IE 
+    document.getElementById("palette"+div).style.width    = "132px";    //IE 
+    document.getElementById("palette"+div).style.paddingRight = "0px";  //IE
+    } 
+
+    //div "palette" mit Farbfeldern aus Array füllen
+    for(i=1;i<pCol.length;i++) {
+        document.getElementById("palette"+div).innerHTML += '<a href="#" onclick="pickc('+"'"+div+"'"+',' + i + ')" class="palettec" style="background:' + pCol[i] + '" title="' + i + '"></a>';
+    }
+    
+    return false;
+    
+}
+
+function dec2hex(num) {
+ return (num+0x100).toString(16).substr(-2).toUpperCase();
+}
+
+var rgb_brights=[0, 2, 3, 4, 6, 8, 11, 16, 23, 32, 45, 64, 90, 128, 181, 255];
+function getBrightHex(b) {
+ var n=0;
+ for (var i=0; i < rgb_brights.length; i++) {
+  if(b >= rgb_brights[i]) n=i;
+ }
+ return n.toString(16).toUpperCase();
+}
+
+var rgbPattern=[]
+//Farbe picken und Palette schliessen
+function pickc(div,i) {
+    //input feld: wert mit geklickter Farbe füllen
+    document.getElementById(div).style.backgroundColor = pCol[i];
+    //div "palette" wieder zerstören  
+    document.getElementById("palette"+div).style.display = "none"; //FF  
+    document.getElementById(div).removeChild(document.getElementById("palette"+div));   
+
+    rgbsplit = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(pCol[i]);
+    rgb={
+        r: parseInt(rgbsplit[1], 16),
+        g: parseInt(rgbsplit[2], 16),
+        b: parseInt(rgbsplit[3], 16)
+    };
+    rgbPattern[div]=rgb;
+    //console.log(rgbPattern);
+    //espAPI("rgb?r="+rgb.r+"&g="+rgb.g+"&b="+rgb.b+"&n="+div)
+    var rgbList=""
+    for (var i=0; i < rgbPattern.length; i++) {
+     var rgb=rgbPattern[i];
+     if(rgb==null) rgb={"r":0,"g":0,"b":0};
+     // old api: rgbList=rgbList+","+rgb.r+","+rgb.g+","+rgb.b;
+     // newer api: rgbList=rgbList+dec2hex(rgb.r)+dec2hex(rgb.g)+dec2hex(rgb.b)
+     // new api:
+     rgbList=rgbList+getBrightHex(rgb.r)+getBrightHex(rgb.g)+getBrightHex(rgb.b)
+    }
+    //rgbList=rgbList.substring(1);
+    //use_pwm= document.getElementById("use_pwm").checked ? "1" : "0";
+    //espAPI("rgb?pattern="+rgbList+"&pwm="+use_pwm)
+    updateRgb("&pattern="+rgbList)
+}
+
+
+</script>   
+<font size=-2>
+<span id="apiurl"> </span>
+<BR>Version: 
+2016-02-02_21-09-05
+</font>
+</body></html>

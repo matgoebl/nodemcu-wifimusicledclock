@@ -1,0 +1,8 @@
+dofile("handle_http_basic.lc")
+dofile("rgb.lc")
+dofile("melody.lc")
+dofile("nettime.lc")
+dofile("clock.lc")
+dofile("modes.lc")
+dofile("cfgedit.lc")
+dofile("twokeys.lc")
