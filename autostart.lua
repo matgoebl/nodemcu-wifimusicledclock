@@ -1,3 +1,4 @@
+dofile("compile.lua")
 dofile("handle_http_basic.lc")
 dofile("rgb.lc")
 dofile("melody.lc")
