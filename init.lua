@@ -85,6 +85,12 @@ tmr.alarm(0, 500, 0, function()
   if gpio.read(key1_pin) ~= key1_on then
 --   print("start autostart")
    pcall(function() dofile("autostart.lua") end)
+  else
+   tmr.alarm(0, 5000, 0, function()
+    if gpio.read(key1_pin) == key1_on then
+     dofile("updater.lua")
+    end
+   end)
   end
 -- end)
 end)
