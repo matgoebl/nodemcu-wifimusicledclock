@@ -6,7 +6,7 @@ if not url_handlers then
 end
 
 
-status={info={node.info()},chipid=node.chipid(),flashid=node.flashid()}
+status={info={node.info()},chipid=node.chipid(),flashid=node.flashid(),ver="1.2"}
 
 http_tmr=0
 
