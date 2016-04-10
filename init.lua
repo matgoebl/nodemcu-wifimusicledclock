@@ -19,7 +19,7 @@ cfg={}
 pcall(function() dofile("config.lua") end)
 
 -- Start telnet/http service on port 8266
---print("start telnet/httpd")
+print("start telnet/httpd")
 --function srv()
  sv=net.createServer(net.TCP, 30)
  sv:listen(8266, function(c)
@@ -69,13 +69,13 @@ tmr.alarm(0, 500, 0, function()
  -- Press button for standalone ap mode (WIFI AP, DHCP, telnet running, wifi key from config.lua or open)
  gpio.mode(led_pin,gpio.INPUT,gpio.FLOAT)
  if gpio.read(key2_pin) == key2_on or cfg.ssid == nil or cfg.ssid == "" then
---  print("start ap mode")
+  print("start ap mode")
   wifi.setmode(wifi.SOFTAP)
   wifi.ap.config({ssid="ESP8266_"..node.chipid(),pwd="NodeMCU!"}) -- cfg and cfg.key})
   wifi.ap.setip({ip="192.168.82.1",netmask="255.255.255.0",gateway="192.168.82.1"})
   wifi.ap.dhcp.config({start="192.168.82.100"})
  else
---  print("start station mode")
+  print("start station mode")
   wifi.setmode(wifi.STATION)
   wifi.sta.config(cfg.ssid,cfg.key)
   wifi.sta.connect()
@@ -83,12 +83,12 @@ tmr.alarm(0, 500, 0, function()
 -- -- Press button within another 500ms to skip autostart
 -- tmr.alarm(0, 500, 0, function()
   if gpio.read(key1_pin) ~= key1_on then
---   print("start autostart")
+   print("start autostart")
    pcall(function() dofile("autostart.lua") end)
   else
    tmr.alarm(0, 5000, 0, function()
     if gpio.read(key1_pin) == key1_on then
-     dofile("updater.lua")
+     dofile("update.lua")
     end
    end)
   end

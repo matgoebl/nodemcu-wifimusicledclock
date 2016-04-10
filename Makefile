@@ -3,13 +3,15 @@ ESPDEV?=/dev/ttyUSB0
 ESPAUTH?=""
 
 install:
-	#for i in  twokeys.lua cfgedit.lua autostart.lua compile.lua; do \
-	# luatool.py --ip $(ESPCONN) --auth "$(ESPAUTH)" --verbose --strip-whitespace --src $$i || exit 1; done
-	luatool.py --ip $(ESPCONN) --auth "$(ESPAUTH)" --verbose --binary --src index.html
+	for i in handle_http_basic.lua rgb.lua melody.lua nettime.lua clock.lua modes.lua twokeys.lua cfgedit.lua; do \
+	 luatool.py --ip $(ESPCONN) --auth "$(ESPAUTH)" --verbose --strip-whitespace --src $$i || exit 1; done
+	for i in index.html api.js rgb.js; do \
+	 luatool.py --ip $(ESPCONN) --auth "$(ESPAUTH)" --verbose --binary --src $$i; done
 
 bootstrap:
-	#nodemcu-uploader.py --port=$(ESPDEV) upload init.lua config.lua
-	for i in init.lua config.lua; do luatool.py --port $(ESPDEV) --baud 9600 --verbose --strip-whitespace --src $$i || exit 1; done
+	#nodemcu-uploader.py --port=$(ESPDEV) upload init.lua config.lua updater.lua
+	for i in init.lua update.lua; do \
+	 luatool.py --port $(ESPDEV) --baud 9600 --verbose --strip-whitespace --src $$i || exit 1; done
 
 reset:
 	luatool.py --port $(ESPDEV) --baud 9600 --verbose --restart
