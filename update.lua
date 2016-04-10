@@ -1,6 +1,7 @@
-local updater_url="https://raw.githubusercontent.com/matgoebl/nodemcu-wifimusicledclock/master/updater.lua"
-local rgb_pin=4  -- GPIO 2
-local brg=31  -- brightness
+update_base_url="https://raw.githubusercontent.com/matgoebl/nodemcu-wifimusicledclock/master/"
+updater_url=update_base_url.."updater.lua"
+rgb_pin=4  -- GPIO 2
+brg=31  -- brightness
 
 ws2812.writergb(rgb_pin,string.char(0,0,0))
 ws2812.writergb(rgb_pin,string.char(0,0,brg)..string.char(0,0,0)..string.char(brg,0,0)..string.char(0,0,0):rep(21))
