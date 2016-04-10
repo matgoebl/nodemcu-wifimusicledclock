@@ -2,6 +2,7 @@ local updater_url="https://raw.githubusercontent.com/matgoebl/nodemcu-wifimusicl
 local rgb_pin=4  -- GPIO 2
 local brg=31  -- brightness
 
+ws2812.writergb(rgb_pin,string.char(0,0,0))
 ws2812.writergb(rgb_pin,string.char(0,0,brg)..string.char(0,0,0)..string.char(brg,0,0)..string.char(0,0,0):rep(21))
 
 tmr.alarm(0,1000,1, function()
