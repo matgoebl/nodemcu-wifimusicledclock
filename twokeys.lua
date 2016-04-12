@@ -54,5 +54,3 @@ tmr.alarm(key_tmr, key_int, 1, function()
   key2_len=0
  end
 end)
-
-modeset(0)

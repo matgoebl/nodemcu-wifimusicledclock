@@ -52,11 +52,16 @@ function iotmode(n)
   if wifi.sta.getip() == nil then
    rgbset(nil,{pattern="700700",ms=0,norepeat="1"})
   else
-   rgbset(nil,{pattern="040",ms=0,norepeat="1"})
+   local m = status.mq_on and "000040" or ""
+   rgbset(nil,{pattern="040"..m,ms=0,norepeat="1"})
   end
  end
  if n and cfg.trigurl then
   http.get(string.format(cfg.trigurl,2-n))
+  rgbset(nil,{pattern=string.rep("00F",2-n),ms=0,norepeat="1"})
+ end
+ if n and status.mq_on then
+  mqc:publish(mqid.."/button",2-n,0,0)
   rgbset(nil,{pattern=string.rep("00F",2-n),ms=0,norepeat="1"})
  end
 end
@@ -66,11 +71,12 @@ modes={iotmode,melodymode,rgbmode,clockmode}
 
 function modeset(n)
  collectgarbage()
- status.mode = (status.mode + n + #modes) % #modes
  rgbset(nil,{pattern="000",ms=0})
  play(nil)
  clock(nil)
  collectgarbage()
+ if n == nil then return end
+ status.mode = (status.mode + n + #modes) % #modes
  tmr.alarm(clock_tmr, 50, 0, function()
   modes[status.mode+1](nil)
  end)

@@ -27,7 +27,7 @@ rgb_pwm=false
 
 -- init ws2812: blank
 --ws2812.writergb(rgb_pin,string.char(0):rep(rgb_max*3))
---ws2812.writergb(rgb_pin,string.char(0))
+ws2812.writergb(rgb_pin,string.char(0))
 
 function rgb_out()
  collectgarbage()

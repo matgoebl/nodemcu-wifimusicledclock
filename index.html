@@ -43,12 +43,18 @@ step: <input id='step' value='1' size=2 onchange="updateRgb()">
 for (var i=0; i < 24; i++) {document.writeln("<div class='picker' id='"+i+"' onclick='buildPalette(\""+i+"\")'></div>");}
 </script>
 
-<li style="clear:both; padding-top:30px">Config: 
+<li style="clear:both; padding-top:30px"><a href="cfg">Config</a>: 
 <select id="cfgkey">
 <option>ssid
 <option>key
 <option>trigurl
 <option>auth
+<option>mquser
+<option>mqpass
+<option>mqhost
+<option>mqport
+<option>mqtls
+<option>mqid
 </select>
 <input id='cfgval' value='' size=30>
 <button onclick='espAPI("cfg?k="+document.getElementById("cfgkey").value+"&v="+encodeURIComponent(document.getElementById("cfgval").value))'>save</button>
