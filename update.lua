@@ -1,4 +1,4 @@
-update_base_url="https://raw.githubusercontent.com/matgoebl/nodemcu-wifimusicledclock/master/"
+update_base_url=cfg.updateurl or "https://raw.githubusercontent.com/matgoebl/nodemcu-wifimusicledclock/master/"
 updater_url=update_base_url.."updater.lua"
 rgb_pin=4  -- GPIO 2
 brg=31  -- brightness
