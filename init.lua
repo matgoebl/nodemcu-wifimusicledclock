@@ -78,7 +78,6 @@ tmr.alarm(0, 500, 0, function()
   print("start station mode")
   wifi.setmode(wifi.STATION)
   wifi.sta.config(cfg.ssid,cfg.key)
-  wifi.sta.connect()
  end
 -- -- Press button within another 500ms to skip autostart
 -- tmr.alarm(0, 500, 0, function()

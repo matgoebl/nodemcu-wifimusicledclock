@@ -3,7 +3,7 @@ ESPDEV?=/dev/ttyUSB0
 ESPAUTH?=""
 
 install:
-	for i in handle_http_basic.lua rgb.lua melody.lua nettime.lua clock.lua modes.lua twokeys.lua cfgedit.lua; do \
+	for i in handle_http_basic.lua rgb.lua melody.lua nettime.lua clock.lua modes.lua twokeys.lua cfgedit.lua compile.lua wifiautoconnect.lua mqtt.lua autostart.lua; do \
 	 luatool.py --ip $(ESPCONN) --auth "$(ESPAUTH)" --verbose --strip-whitespace --src $$i || exit 1; done
 	for i in index.html api.js rgb.js; do \
 	 luatool.py --ip $(ESPCONN) --auth "$(ESPAUTH)" --verbose --binary --src $$i; done
