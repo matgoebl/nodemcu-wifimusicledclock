@@ -56,6 +56,8 @@ for (var i=0; i < 24; i++) {document.writeln("<div class='picker' id='"+i+"' onc
 <option>mqtls
 <option>mqid
 <option>updateurl
+<option>lednum
+<option>leddim
 </select>
 <input id='cfgval' value='' size=30>
 <button onclick='espAPI("cfg?k="+document.getElementById("cfgkey").value+"&v="+encodeURIComponent(document.getElementById("cfgval").value))'>save</button>
