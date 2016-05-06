@@ -6,13 +6,14 @@ local clock_warn=4*clock_int
 local show_clock=function(ts,h,m,s)
  local hp=(math.floor(h*rgb_max/12)+rgb_max/2)%rgb_max
  local mp=(math.floor(m*rgb_max/60)+rgb_max/2)%rgb_max
+ local blank=string.char(0,0,0)
  local p
  if hp == mp then
-  p =  string.char(3,3,0):rep(hp)..string.char(rgb_dim,0,rgb_dim)..string.char(3,3,0):rep(rgb_max-mp-1)
+  p =  blank:rep(hp)..string.char(rgb_dim,0,rgb_dim)..blank:rep(rgb_max-mp-1)
  elseif hp < mp then
-  p =  string.char(3,3,0):rep(hp)..string.char(rgb_dim,0,0)..string.char(0,63,0):rep(mp-hp-1)..string.char(0,0,rgb_dim)..string.char(3,3,0):rep(rgb_max-mp-1)
+  p =  blank:rep(hp)..string.char(rgb_dim,0,0)..string.char(0,rgb_dim/4,0):rep(mp-hp-1)..string.char(0,0,rgb_dim)..blank:rep(rgb_max-mp-1)
  else
-  p =  string.char(0,63,0):rep(mp)..string.char(0,0,rgb_dim)..string.char(3,3,0):rep(hp-mp-1)..string.char(rgb_dim,0,0)..string.char(0,64,0):rep(rgb_max-hp-1)
+  p =  string.char(0,rgb_dim/4,0):rep(mp)..string.char(0,0,rgb_dim)..blank:rep(hp-mp-1)..string.char(rgb_dim,0,0)..string.char(0,rgb_dim/4,0):rep(rgb_max-hp-1)
  end
  ws2812.writergb(rgb_pin,p)
  p=nil
