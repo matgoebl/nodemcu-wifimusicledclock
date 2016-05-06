@@ -3,7 +3,7 @@ if cfg.mqhost==nil then return end
 mqsub={}
 local mq_tmr=4
 
-local mqid = cfg.mqid or "esp8266_"..wifi.sta.getmac()
+mqid = cfg.mqid or "esp8266_"..wifi.sta.getmac()
 mqc = mqtt.Client(mqid, 60, cfg.mquser or "", cfg.mqpass or "")
 status.mq_on = false
 

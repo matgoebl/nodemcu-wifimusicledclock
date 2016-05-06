@@ -3,7 +3,12 @@
 -- simple registry for custom handlers by url
 url_handlers={}
 
-status={info={node.info()},chipid=node.chipid(),flashid=node.flashid(),ver="1.3"}
+local majorVer, minorVer, devVer, chipid, flashid, flashsize, flashmode, flashspeed = node.info()
+status={
+ info={majorVer, minorVer, devVer, chipid, flashid, flashsize, flashmode, flashspeed},
+ ver="1.3"
+}
+
 
 local http_tmr=0
 
@@ -62,6 +67,10 @@ handle_http = function(c,m,u,q)
   status.heap=node.heap()
   status.uptime_s=tmr.time()
   status.counter_us=tmr.now()
+  local ssid, password, bssid_set, bssid = wifi.sta.getconfig()
+  status.wifi={ssid,bssid}
+  local ip,mask,gw = wifi.sta.getip()
+  status.ip={ip,mask,gw}
   r=status
 
  elseif u == "/reset" then

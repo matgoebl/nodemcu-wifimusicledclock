@@ -10,6 +10,6 @@ dofile("twokeys.lc")
 dofile("wifiautoconnect.lc")
 dofile("mqtt.lc")
 
-tmr.alarm(0,5000,1, function()
+tmr.alarm(0,10000,1, function()
  modeset(0)
 end)
