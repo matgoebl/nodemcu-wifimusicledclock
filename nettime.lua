@@ -3,8 +3,8 @@
 -- Response: 32 bytes
 -- Traffic per day: 60*24*(29+32) = 87840
 
-ts = 0 -- timestamp
-tc = nil -- time connection
+--local ts = 0 -- timestamp
+local tc = nil -- time connection
 
 function nettime(cb)
  if tc ~= nil then
@@ -12,7 +12,7 @@ function nettime(cb)
  end
  tc = net.createConnection(net.UDP,0)
  tc:on("receive", function(tc,d)
-  ts=((d:byte(1)*256+d:byte(2))*256+d:byte(3))*256+d:byte(4) - 1208988800 - 1000000000  -- unix epoch begins 70 years later, offset value must be split because it is too big for integer type
+  local ts=((d:byte(1)*256+d:byte(2))*256+d:byte(3))*256+d:byte(4) - 1208988800 - 1000000000  -- unix epoch begins 70 years later, offset value must be split because it is too big for integer type
   local tz=1 -- normal/wintertime
   -- Daylight-Saving Times 2016-2027 for Europe
   if ( ts > 1459040400 and ts < 1477789200 ) or  ( ts > 1490490000 and ts < 1509238800 ) or  ( ts > 1521939600 and ts < 1540688400 ) or

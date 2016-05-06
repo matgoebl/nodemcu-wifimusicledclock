@@ -35,18 +35,6 @@ function rgbmode(n)
 --rgbx={"F00","0F0","00F","FFF","888","333","111","000"}
 end
 
-clk=0
-function clockmode(n)
- if n == nil or n == -1 then
-  clock(true)
- elseif n == 1 then
-  tmr.alarm(clock_tmr, 50, 1, function()
-   update_clock(0,math.floor(clk/60)%24,clk%60,0)
-   clk=clk+1
-  end)
- end
-end
-
 function iotmode(n)
  if not n then
   if wifi.sta.getip() == nil then
@@ -77,7 +65,7 @@ function modeset(n)
  collectgarbage()
  if n == nil then return end
  status.mode = (status.mode + n + #modes) % #modes
- tmr.alarm(clock_tmr, 50, 0, function()
+ tmr.alarm(0, 50, 0, function()
   modes[status.mode+1](nil)
  end)
 end
