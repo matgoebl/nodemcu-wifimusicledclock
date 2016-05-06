@@ -1,5 +1,5 @@
-update_files={'compile.lua','http.lua','rgb.lua','melody.lua','nettime.lua','clock.lua','modes.lua','cfgedit.lua','twokeys.lua','index.html','api.js','rgb.js','autostart.lua'}
--- excluded: 'config.lua','init.lua','update.lua','updater.lua'
+update_files={'cfgedit.lua','clock.lua','compile.lua','http.lua','melody.lua','modes.lua','mqtt.lua','nettime.lua','rgb.lua','twokeys.lua','wifiautoconnect.lua,'autostart.lua','init.lua','update.lua'}
+-- normally excluded: 'config.lua','init.lua','update.lua','updater.lua'
 
 function download_files(filelist,count)
  local remaining=#filelist
