@@ -37,19 +37,9 @@ print("start telnet/httpd")
     local m,u,q=d:match("^([^ ]*)[ ]+([^? ]*)\??([^ ]*)[ ]+[Hh][Tt][Tt][Pp]/")
     if m ~= nil and u ~= nil then
      d=nil
-     m=m:upper()
-     local p={}
-     for s in string.gmatch(q:gsub('+',' '),"([^&]+)") do
-      local k,v=s:match("(.*)=(.*)")
-      if k ~= nil then
-       p[k]=v:gsub("%%(%x%x)",function(s) return string.char(tonumber(s,16)) end)
-      end
-     end
      c:on("receive",function() end)
-     collectgarbage()
-     local s,r=pcall(function() return handle_http(c,m,u,p) end)
-     collectgarbage()
-     if s==false or r==nil then c:close() end
+     local r=handle_http(c,m,u,q)
+     if r~=true then c:close() end
      return
     end
    end

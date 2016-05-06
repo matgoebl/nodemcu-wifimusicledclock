@@ -1,4 +1,4 @@
-update_files={'compile.lua','handle_http_basic.lua','rgb.lua','melody.lua','nettime.lua','clock.lua','modes.lua','cfgedit.lua','twokeys.lua','index.html','api.js','rgb.js','autostart.lua'}
+update_files={'compile.lua','http.lua','rgb.lua','melody.lua','nettime.lua','clock.lua','modes.lua','cfgedit.lua','twokeys.lua','index.html','api.js','rgb.js','autostart.lua'}
 -- excluded: 'config.lua','init.lua','update.lua','updater.lua'
 
 function download_files(filelist,count)

@@ -1,17 +1,13 @@
 -- handler for http requests via init_wifi_telnethttpd.lua
 
 -- simple registry for custom handlers by url
-if not url_handlers then
- url_handlers={}
-end
+url_handlers={}
 
+status={info={node.info()},chipid=node.chipid(),flashid=node.flashid(),ver="1.3"}
 
-status={info={node.info()},chipid=node.chipid(),flashid=node.flashid(),ver="1.2"}
+local http_tmr=0
 
-http_tmr=0
-
-
-sendfile = function(c,f)
+local sendfile = function(c,f)
  local pos=0
  local run=coroutine.yield()
  while run do
@@ -29,9 +25,17 @@ sendfile = function(c,f)
  end
 end
 
-
-handle_http = function(c,m,u,p)
+handle_http = function(c,m,u,q)
 -- print("request for "..m.." "..u)
+ local m=m:upper()
+ local p={}
+ for s in string.gmatch(q:gsub('+',' '),"([^&]+)") do
+  local k,v=s:match("(.*)=(.*)")
+  if k ~= nil then
+   p[k]=v:gsub("%%(%x%x)",function(s) return string.char(tonumber(s,16)) end)
+  end
+ end
+
  collectgarbage()
  local r = nil
 
@@ -43,7 +47,7 @@ handle_http = function(c,m,u,p)
   c:on("sent", function(c) coroutine.resume(o,true) end)
   c:on("disconnection", function(c) coroutine.resume(o,false) o=nil end)
   coroutine.resume(o,c,u:gsub("[^.%w]",""))
-  return true
+  return true  -- do not close the connection
 
  elseif u == "/status" then
 --  if p.measure then
@@ -55,7 +59,7 @@ handle_http = function(c,m,u,p)
 --    end)
 --   end)
 --  end
-  status.heap_byte=node.heap()
+  status.heap=node.heap()
   status.uptime_s=tmr.time()
   status.counter_us=tmr.now()
   r=status
@@ -77,4 +81,5 @@ handle_http = function(c,m,u,p)
  else
   c:send("HTTP/1.0 400 ERROR\r\n\r\n")
  end
+ return false
 end
