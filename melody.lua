@@ -1,8 +1,8 @@
-beep_pin=2 -- GPIO4
-beep_tmr=2
+local beep_pin=2 -- GPIO4
+local beep_tmr=2
 
 -- http://tnotes.de/NotenFrequenzen http://rechneronline.de/note/ 
-tones={
+local tones={
   BV= 246,
   C = 261,
  XC = 277,
@@ -32,7 +32,7 @@ tones={
 }
 
 -- "F00","0F0","00F","FFF","888","333","111","000"
-tonecolor={
+local tonecolor={
   BV= "F08000003000000",
   C = "F00000FF0000000",
  XC = "F0000FFF0000000",

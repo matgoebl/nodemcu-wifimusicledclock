@@ -1,16 +1,16 @@
-rgb_tmr=1
+local rgb_tmr=1
 -- rgb_pin=1 -- GPIO 5
 rgb_pin=4 -- GPIO 2
-rgb_pos=0
+local rgb_pos=0
 --rgb_max=60 -- 240
 --rgb_max=300
 rgb_max=24
-rgb_step=1
-rgb_pattern=string.char(0):rep(rgb_max*3)
-rgb_ms=0
+local rgb_step=1
+local rgb_pattern=string.char(0):rep(rgb_max*3)
+local rgb_ms=0
 
 -- rgb_brights={0, 2, 3, 4, 6, 8, 11, 16, 23, 32, 45, 64, 90, 128, 181, 255}
-rgb_brights={0, 2, 3, 4, 6, 8, 11, 16, 23, 32, 45, 64, 90, 90, 90, 90}
+local rgb_brights={0, 2, 3, 4, 6, 8, 11, 16, 23, 32, 45, 64, 90, 90, 90, 90}
 
 -- init pwm: setup and blank
 gpio.mode(5,gpio.OUTPUT)
@@ -23,19 +23,19 @@ pwm.start(5)
 pwm.start(6)
 pwm.start(7)
 
-rgb_pwm=false
+local rgb_pwm=false
 
 -- init ws2812: blank
 --ws2812.writergb(rgb_pin,string.char(0):rep(rgb_max*3))
 ws2812.writergb(rgb_pin,string.char(0))
 
-function rgb_out()
+local function rgb_out()
  collectgarbage()
- local s=tmr.now()
+-- local s=tmr.now()
  ws2812.writergb(rgb_pin,string.sub(rgb_pattern:rep(2),rgb_pos+1,rgb_pos+rgb_pattern:len()))
- status.ws_us=tmr.now()-s
- status.ws_cnt=rgb_pattern:len()
- status.ws_pos=rgb_pos
+-- status.ws_us=tmr.now()-s
+-- status.ws_cnt=rgb_pattern:len()
+-- status.ws_pos=rgb_pos
  if rgb_pwm then
   pwm.setduty(5,rgb_pattern:byte(rgb_pos+2)*4)
   pwm.setduty(6,rgb_pattern:byte(rgb_pos+1)*4)

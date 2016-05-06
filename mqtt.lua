@@ -1,9 +1,9 @@
 if cfg.mqhost==nil then return end
 
 mqsub={}
-mq_tmr=4
+local mq_tmr=4
 
-mqid = cfg.mqid or "esp8266_"..wifi.sta.getmac()
+local mqid = cfg.mqid or "esp8266_"..wifi.sta.getmac()
 mqc = mqtt.Client(mqid, 60, cfg.mquser or "", cfg.mqpass or "")
 status.mq_on = false
 
@@ -27,7 +27,7 @@ end)
 mqc:on("message", function(m,t,d)
  print("mqtt msg:",t,d or "nil")
  if d~=nil and mqsub[t] then
-  pcall(function() mqsub[t](m,t,d) end)
+  mqsub[t](m,t,d)
  end
 end)
 

@@ -1,4 +1,4 @@
-c=function()
+local compileall=function()
  for f in pairs(file.list()) do
   if f:match("%.lua$") and f~="init.lua" and f~="autostart.lua" and f~="config.lua" and f~="compile.lua" and f~="update.lua" then
    if file.open(f) then
@@ -12,6 +12,6 @@ c=function()
  end
 end
 
-c()
-c=nil
+compileall()
+compileall=nil
 collectgarbage()

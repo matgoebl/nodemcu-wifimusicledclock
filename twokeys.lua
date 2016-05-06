@@ -1,12 +1,12 @@
-key_tmr=3
-key_int=50
+local key_tmr=3
+local key_int=50
 --key1_pin=3  -- GPIO0 "MODE"
 --key1_on=gpio.LOW
 --key2_pin=8  -- GPIO15 "SELECT"
 --key2_on=gpio.HIGH
 
-key1_len=0
-key2_len=0
+local key1_len=0
+local key2_len=0
 status.mode=0
 status.uptime_ms=0
 
