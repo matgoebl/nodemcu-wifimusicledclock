@@ -17,11 +17,24 @@ mqsub[mqid.."/play"]=function(m,t,d)
  play(tonumber(p.s),tonumber(p.p),p.m,p.b)
 end
 
-mqc:lwt(mqid.."/status", "offline", 0, 1)
+local mqpubstatus=function()
+ if not status.mq_on then return end
+ status.heap=node.heap()
+ status.uptime_s=tmr.time()
+ status.counter_us=tmr.now()
+ local ssid, password, bssid_set, bssid = wifi.sta.getconfig()
+ status.wifi={ssid,bssid}
+ local ip,mask,gw = wifi.sta.getip()
+ status.ip={ip,mask,gw}
+ mqc:publish(mqid.."/status", cjson.encode(status), 0, 1)
+end
+
+mqc:lwt(mqid.."/conn", "offline", 0, 1)
 
 mqc:on("offline", function(conn)
  status.mq_on = false
  print("mqtt offline")
+ tmr.alarm(mq_tmr, 5000, 0, mqconnect)
 end)
 
 mqc:on("message", function(m,t,d)
@@ -31,27 +44,29 @@ mqc:on("message", function(m,t,d)
  end
 end)
 
-mqc:connect(cfg.mqhost, cfg.mqport and tonumber(cfg.mqport) or 1883, cfg.mqtls=="1" and 1 or 0, 1,
- function(m)
-  print("mqtt connected")
-  local s={}
-  for t,f in pairs(mqsub) do
-   s[t]=0
+mqconnect=function()
+ print("mqtt connecting to "..cfg.mqhost..":"..cfg.mqport.." ssl:"..cfg.mqtls)  
+ collectgarbage()
+ mqc:connect(cfg.mqhost, cfg.mqport and tonumber(cfg.mqport) or 1883, cfg.mqtls=="1" and 1 or 0, 0,
+  function(m)
+   print("mqtt connected")
+   local s={}
+   for t,f in pairs(mqsub) do
+    s[t]=0
+   end
+   mqc:subscribe(s, function(m)
+    print("mqtt online")
+    status.mq_on = true
+    mqc:publish(mqid.."/conn", "online", 0, 1)
+    mqpubstatus()
+    tmr.alarm(mq_tmr, 60000, 1, mqpubstatus)
+   end)
+  end,
+  function(m,e)
+   status.mq_on = false
+   print("mqtt error "..e)
   end
-  mqc:subscribe(s, function(m)
-   status.mq_on = true
-   mqc:publish(mqid.."/status", "online", 0, 1)
-   print("mqtt online")
-  end)
- end,
- function(m,e)
-  status.mq_on = false
-  print("mqtt error")
- end
-)
+ )
+end
 
---tmr.alarm(mq_tmr, 10000, 1, function()
--- if status.mq_on then
---  mqc:publish(mqid.."/uptime",tmr.time(),0,0)
--- end
---end)
+tmr.alarm(mq_tmr, 5000, 0, mqconnect)
