@@ -13,6 +13,14 @@ local rgb_ms=0
 -- rgb_brights={0, 2, 3, 4, 6, 8, 11, 16, 23, 32, 45, 64, 90, 128, 181, 255}
 local rgb_brights={0, 2, 3, 4, 6, 8, 11, 16, 23, 32, 45, 64, 90, 90, 90, 90}
 
+-- maintain backwards compatibility
+ws2812_write=ws2812.write
+if ws2812.init then
+ ws2812.init() -- newer firmware api
+else
+ ws2812_write=function(out) ws2812.writergb(rgb_pin,out) end  -- old firmware api
+end
+
 -- init pwm: setup and blank
 gpio.mode(5,gpio.OUTPUT)
 gpio.mode(6,gpio.OUTPUT)
@@ -26,14 +34,10 @@ pwm.start(7)
 
 local rgb_pwm=false
 
--- init ws2812: blank
---ws2812.writergb(rgb_pin,string.char(0):rep(rgb_max*3))
-ws2812.writergb(rgb_pin,string.char(0))
-
 local function rgb_out()
  collectgarbage()
 -- local s=tmr.now()
- ws2812.writergb(rgb_pin,string.sub(rgb_pattern:rep(2),rgb_pos+1,rgb_pos+rgb_pattern:len()))
+ ws2812_write(string.sub(rgb_pattern:rep(2),rgb_pos+1,rgb_pos+rgb_pattern:len()))
 -- status.ws_us=tmr.now()-s
 -- status.ws_cnt=rgb_pattern:len()
 -- status.ws_pos=rgb_pos
@@ -49,7 +53,7 @@ local function rgb_out()
 end
 
 rgb_out()
-
+rgb_out() -- twice: work around init bug in old firmware
 
 function rgbset(c,p)
   tmr.stop(rgb_tmr)
@@ -60,13 +64,13 @@ function rgbset(c,p)
    rgb_step= tonumber(p.step) or 1
   end
   if p.pattern then
-   local s=tmr.now()
+--   local s=tmr.now()
    local t={}
    for r,g,b in p.pattern:gmatch("(%x)(%x)(%x)") do table.insert(t,string.char(rgb_brights[tonumber(r,16)+1])..string.char(rgb_brights[tonumber(g,16)+1])..string.char(rgb_brights[tonumber(b,16)+1])) end
    p.pattern=nil
    rgb_pattern=table.concat(t)
    t=nil
-   status.ws_conv=tmr.now()-s
+--   status.ws_conv=tmr.now()-s
    collectgarbage()
    if p.norepeat then
     rgb_pattern=rgb_pattern..string.char(0):rep(rgb_max*3-rgb_pattern:len())

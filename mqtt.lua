@@ -65,6 +65,7 @@ mqconnect=function()
   function(m,e)
    status.mq_on = false
    print("mqtt error "..e)
+   tmr.alarm(mq_tmr, 5000, 0, mqconnect)
   end
  )
 end

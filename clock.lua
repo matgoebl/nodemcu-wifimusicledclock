@@ -15,7 +15,7 @@ local show_clock=function(ts,h,m,s)
  else
   p =  string.char(0,rgb_dim/4,0):rep(mp)..string.char(0,0,rgb_dim)..blank:rep(hp-mp-1)..string.char(rgb_dim,0,0)..string.char(0,rgb_dim/4,0):rep(rgb_max-hp-1)
  end
- ws2812.writergb(rgb_pin,p)
+ ws2812_write(p)
  p=nil
  collectgarbage()
  status.clkup=status.uptime_ms
