@@ -11,5 +11,5 @@ dofile("wifiautoconnect.lc")
 dofile("mqtt.lc")
 
 tmr.alarm(0,10000,1, function()
- modeset(0)
+ modeset(3)
 end)

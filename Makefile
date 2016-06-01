@@ -1,4 +1,5 @@
 ESPCONN?=esp:8266
+ESPBAUD?=115200
 ESPDEV?=/dev/ttyUSB0
 ESPAUTH?=""
 
@@ -12,14 +13,14 @@ install:
 
 bootstrap:
 	#nodemcu-uploader.py --port=$(ESPDEV) upload init.lua config.lua updater.lua
-	for i in init.lua update.lua; do \
-	 luatool.py --port $(ESPDEV) --baud 9600 --verbose --strip-whitespace --src $$i || exit 1; done
+	for i in init.lua update.lua config.lua; do \
+	 luatool.py --port $(ESPDEV) --baud $(ESPBAUD) --verbose --strip-whitespace --src $$i || exit 1; done
 
 reset:
-	luatool.py --port $(ESPDEV) --baud 9600 --verbose --restart
+	luatool.py --port $(ESPDEV) --baud $(ESPBAUD) --verbose --restart
 
 format:
-	luatool.py --port $(ESPDEV) --baud 9600 --verbose --execute "file.format()"
+	luatool.py --port $(ESPDEV) --baud $(ESPBAUD) --verbose --execute "file.format()"
 	sleep 60
 
 flash_nodemcu_dev:
