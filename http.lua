@@ -6,7 +6,7 @@ url_handlers={}
 local majorVer, minorVer, devVer, chipid, flashid, flashsize, flashmode, flashspeed = node.info()
 status={
  info={majorVer, minorVer, devVer, chipid, flashid, flashsize, flashmode, flashspeed},
- ver="1.3"
+ ver="2.0"
 }
 
 
