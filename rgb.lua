@@ -1,76 +1,49 @@
 local rgb_tmr=1
--- rgb_pin=1 -- GPIO 5
-rgb_pin=4 -- GPIO 2
 local rgb_pos=0
---rgb_max=60 -- 240
---rgb_max=300
+local rgb_step=1
+local rgb_ms=0
+local rgb_fade=4
+local rgb_pattern=string.char(0):rep(3)
 rgb_max=cfg.lednum or 24
 rgb_dim=cfg.leddim or 90
-local rgb_step=1
-local rgb_pattern=string.char(0):rep(rgb_max*3)
-local rgb_ms=0
 
 -- rgb_brights={0, 2, 3, 4, 6, 8, 11, 16, 23, 32, 45, 64, 90, 128, 181, 255}
 local rgb_brights={0, 2, 3, 4, 6, 8, 11, 16, 23, 32, 45, 64, 90, 90, 90, 90}
 
--- maintain backwards compatibility
-ws2812_write=ws2812.write
-if ws2812.init then
- ws2812.init() -- newer firmware api
-else
- ws2812_write=function(out) ws2812.writergb(rgb_pin,out) end  -- old firmware api
-end
+ws2812.init()
+rgb_buf=ws2812.newBuffer(rgb_max,3)
+rgb_buf:fill(0,0,0)
+rgb_buf:write()
 
--- init pwm: setup and blank
-gpio.mode(5,gpio.OUTPUT)
-gpio.mode(6,gpio.OUTPUT)
-gpio.mode(7,gpio.OUTPUT)
-pwm.setup(5,1000,0)
-pwm.setup(6,1000,0)
-pwm.setup(7,1000,0)
-pwm.start(5)
-pwm.start(6)
-pwm.start(7)
-
-local rgb_pwm=false
-
-local function rgb_out()
+local function rgb_update()
  collectgarbage()
--- local s=tmr.now()
- ws2812_write(string.sub(rgb_pattern:rep(2),rgb_pos+1,rgb_pos+rgb_pattern:len()))
--- status.ws_us=tmr.now()-s
--- status.ws_cnt=rgb_pattern:len()
--- status.ws_pos=rgb_pos
- if rgb_pwm then
-  pwm.setduty(5,rgb_pattern:byte(rgb_pos+2)*4)
-  pwm.setduty(6,rgb_pattern:byte(rgb_pos+1)*4)
-  pwm.setduty(7,rgb_pattern:byte(rgb_pos+3)*4)
+ if rgb_fade==0 then rgb_buf:fill(0,0,0) else rgb_buf:fade(rgb_fade) end
+ for i=1,#rgb_pattern,3 do
+  if rgb_fade==0 or rgb_pattern:byte(i)+rgb_pattern:byte(i+1)+rgb_pattern:byte(i+2) > 0 then
+   rgb_buf:set(((rgb_pos+i-1)/3)%rgb_buf:size()+1,rgb_pattern:byte(i),rgb_pattern:byte(i+1),rgb_pattern:byte(i+2))
+  end
  end
+ rgb_buf:write()
  rgb_pos=(rgb_pos-3*rgb_step) % rgb_pattern:len()
  if rgb_ms > 0 then
-  tmr.alarm(rgb_tmr, rgb_ms, 0, rgb_out)
+  tmr.alarm(rgb_tmr, rgb_ms, 0, rgb_update)
  end
 end
-
-rgb_out()
-rgb_out() -- twice: work around init bug in old firmware
 
 function rgbset(c,p)
   tmr.stop(rgb_tmr)
-  if p.pwm then
-   rgb_pwm= p.pwm=="1"
-  end
   if p.step then
    rgb_step= tonumber(p.step) or 1
   end
+--  if p.fade then
+   rgb_fade= tonumber(p.fade) or 0
+--  end
   if p.pattern then
---   local s=tmr.now()
    local t={}
-   for r,g,b in p.pattern:gmatch("(%x)(%x)(%x)") do table.insert(t,string.char(rgb_brights[tonumber(r,16)+1])..string.char(rgb_brights[tonumber(g,16)+1])..string.char(rgb_brights[tonumber(b,16)+1])) end
+   for g,r,b in p.pattern:gmatch("(%x)(%x)(%x)") do table.insert(t,string.char(rgb_brights[tonumber(r,16)+1])..string.char(rgb_brights[tonumber(g,16)+1])..string.char(rgb_brights[tonumber(b,16)+1])) end
    p.pattern=nil
    rgb_pattern=table.concat(t)
    t=nil
---   status.ws_conv=tmr.now()-s
    collectgarbage()
    if p.norepeat then
     rgb_pattern=rgb_pattern..string.char(0):rep(rgb_max*3-rgb_pattern:len())
@@ -85,7 +58,7 @@ function rgbset(c,p)
   if p.ms then
    rgb_ms=tonumber(p.ms)
   end
-  rgb_out()
+  rgb_update()
   return ({})
 end
 

@@ -2,8 +2,11 @@ local rgb_preset_current=0
 local rgb_presets={
  "F0080080440800800F0080480840800F0080480840800",
  "F000000000000F000000000000F000000000",
- "F00800400200",
- "F00000","0F0000000","00F000000000","FFF000000000000"}
+-- "F00800400200",
+ "F00000000000",
+ "0F0000000000",
+ "00F000000000",
+ "FFF000000000000000"}
 
 local melody_preset_current=0
 local melody_presets={
@@ -27,7 +30,7 @@ function rgbmode(n)
  end
  local p = rgb_presets[rgb_preset_current+1]
  if n == 0 then
-  rgbset(nil,{pattern=p.."000000000",ms=10,step=-1,norepeat=1})
+  rgbset(nil,{pattern=p.."000000000",ms=10,step=-1,norepeat=1,fade=2})
  else
   rgbset(nil,{pattern=p,ms=50,step=1})
  end

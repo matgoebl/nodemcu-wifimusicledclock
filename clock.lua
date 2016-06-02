@@ -4,20 +4,22 @@ local clock_int_demo=50
 local clock_warn=4*clock_int
 
 local show_clock=function(ts,h,m,s)
- local hp=(math.floor(h*rgb_max/12)+rgb_max/2)%rgb_max
- local mp=(math.floor(m*rgb_max/60)+rgb_max/2)%rgb_max
- local blank=string.char(0,0,0)
- local p
- if hp == mp then
-  p =  blank:rep(hp)..string.char(rgb_dim,0,rgb_dim)..blank:rep(rgb_max-mp-1)
- elseif hp < mp then
-  p =  blank:rep(hp)..string.char(rgb_dim,0,0)..string.char(0,rgb_dim/4,0):rep(mp-hp-1)..string.char(0,0,rgb_dim)..blank:rep(rgb_max-mp-1)
- else
-  p =  string.char(0,rgb_dim/4,0):rep(mp)..string.char(0,0,rgb_dim)..blank:rep(hp-mp-1)..string.char(rgb_dim,0,0)..string.char(0,rgb_dim/4,0):rep(rgb_max-hp-1)
+ rgb_buf:fill(0,0,0)
+ local hp=(math.floor(h*rgb_max/12)+rgb_max/2)%rgb_max+1
+ local mp=(math.floor(m*rgb_max/60)+rgb_max/2)%rgb_max+1
+ for i=1,rgb_max,2 do
+  rgb_buf:set(i,2,0,0)
  end
- ws2812_write(p)
- p=nil
- collectgarbage()
+ for i=1,rgb_max,6 do
+  rgb_buf:set(i,16,0,0)
+ end
+ if hp == mp then
+  rgb_buf:set(hp,rgb_dim,0,rgb_dim)
+ else
+  rgb_buf:set(hp,0,rgb_dim,0)
+  rgb_buf:set(mp,0,0,rgb_dim)
+ end
+ rgb_buf:write()
  status.clkup=status.uptime_ms
 end
 

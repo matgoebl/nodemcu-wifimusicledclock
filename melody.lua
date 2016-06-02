@@ -31,24 +31,6 @@ local tones={
   z = 0
 }
 
--- "F00","0F0","00F","FFF","888","333","111","000"
-local tonecolor={
-  BV= "F08000003000000",
-  C = "F00000FF0000000",
- XC = "F0000FFF0000000",
-  D = "F0F0000F0D00000",
- XD = "F0F00F0F0FF0000",
-  E = "000F00000FF0000",
-  F = "0000F0000F0D000",
- XF = "000F0F00F0F0FF0",
-  G = "000000F00000FF0",
- XG = "000000F0000FFF0",
-  A = "00000D000FF0D0D",
- XA = "00000D00F000D0D",
-  B = "FF00F000000F000",
-  Z = "000000000000000",
-}
-
 
 function play(s,p,m,b,i,o)
  -- s: tone length  p: inter-tone pause  m: music string in abc format  b: visualize tones with rgb leds
@@ -79,17 +61,21 @@ function play(s,p,m,b,i,o)
   end
  end
  local f=tones[t]
- if not f then f=0 end
+ if not f then f=0 end  -- pause if note not found
  if f > 0 then
   pwm.setup(beep_pin,f,512)  
   pwm.start(beep_pin)  
  end
  -- print(f,d)
  if b == "1" then
-  local tc=tonecolor[t:upper()]
-  local p="000"
-  if tc ~= nil then
-   rgbset(nil,{pattern=p:rep(i%2)..tc,ms=0})
+  local tp=t:upper():gsub("[XV]","")
+  local tn=string.find("CDEFGAB",tp)
+  if tn ~= nil then
+   rgb_buf:wsbuf:fade(2)
+   for n=0,4 do
+    rgb_buf:set((tn+5*n)%wsbuf:size()+1,rgb_dim*(i%3==0 and 1 or 0),rgb_dim*(i%3==1 and 1 or 0),rgb_dim*(i%3==2 and 1 or 0))
+   end
+   wsbuf:write()
    i=i+1
   end
  end
