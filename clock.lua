@@ -40,12 +40,23 @@ end
 
 local demo_counter=0
 function clockmode(n)
- if n == nil or n == -1 then
+ if n == nil then
   clock(true)
- elseif n == 1 then
+ elseif n == 0 then
   tmr.alarm(clock_tmr, clock_int_demo, 1, function()
    show_clock(0,math.floor(demo_counter/60)%24,demo_counter%60,0)
    demo_counter=demo_counter+1
   end)
+ else
+  if n==-1 then n=2 end
+  if cfg.trigurl then
+   http.get(string.format(cfg.trigurl,n))
+   rgbset(nil,{pattern=string.rep("00F",n),ms=0,norepeat="1"})
+  end
+  if status.mq_on then
+   mqc:publish(mqid.."/button",n,0,0)
+   rgbset(nil,{pattern=string.rep("00F",n),ms=0,norepeat="1"})
+  end
+  tmr.alarm(clock_tmr, 3000, 0, clock)
  end
 end

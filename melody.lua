@@ -71,11 +71,11 @@ function play(s,p,m,b,i,o)
   local tp=t:upper():gsub("[XV]","")
   local tn=string.find("CDEFGAB",tp)
   if tn ~= nil then
-   rgb_buf:wsbuf:fade(2)
+   rgb_buf:fade(2)
    for n=0,4 do
-    rgb_buf:set((tn+5*n)%wsbuf:size()+1,rgb_dim*(i%3==0 and 1 or 0),rgb_dim*(i%3==1 and 1 or 0),rgb_dim*(i%3==2 and 1 or 0))
+    rgb_buf:set((tn+5*n)%rgb_buf:size()+1,rgb_dim*(i%3==0 and 1 or 0),rgb_dim*(i%3==1 and 1 or 0),rgb_dim*(i%3==2 and 1 or 0))
    end
-   wsbuf:write()
+   rgb_buf:write()
    i=i+1
   end
  end

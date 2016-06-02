@@ -48,17 +48,15 @@ Display Modes
 -------------
 "MODE" toggles through all modes.
 
-1. Music
+1. Clock & IoT
+ - Special switches to demo mode (one way, back to normal mode with 3x "MODE")
+ - Next/prev calls the configured IoT URL
+ - The URL may contain a %d, %d will be 1/2 for short/longer press (indicated with 1/2 blue leds)
+2. Music
  - "SELECT" changes the melody
-2. Running Lights
+3. Running Lights
  - "SELECT" changes the pattern
  - Special runs the current pattern in reverse direction
-3. Clock
- - "SELECT" switches to demo mode (one way, back to normal mode with 4x "MODE")
-4. IoT
- - Display WLAN status: 1x green: connected  2x red: no connection/no ip address
- - "SELECT" calls the configured IoT URL
- - The URL may contain a %d, %d will be 1/3/2 for short/longer/long press (indicated with 1/3/2 blue leds)
 
 
 Initial Setup
