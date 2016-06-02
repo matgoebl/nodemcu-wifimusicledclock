@@ -1,5 +1,8 @@
 function savecfg(k,v)
  if k then cfg[k] = v end
+ if not cfg.ssid then
+  cfg.ssid,cfg.key = wifi.sta.getconfig()
+ end
  if file.open("config.lua","w+") then
   file.write("cfg={")
    for k,v in pairs(cfg) do

@@ -51,27 +51,31 @@ print("start telnet/httpd")
 --end
 --srv()
 
--- Led on for 500ms
+-- Led on for 1000ms
 gpio.mode(led_pin,gpio.OUTPUT)
 gpio.write(led_pin,gpio.LOW)
 
-tmr.alarm(0, 500, 0, function()
+tmr.alarm(0, 1000, 0, function()
  -- Press button for standalone ap mode (WIFI AP, DHCP, telnet running, wifi key from config.lua or open)
  gpio.mode(led_pin,gpio.INPUT,gpio.FLOAT)
- if gpio.read(key2_pin) == key2_on or cfg.ssid == nil or cfg.ssid == "" then
-  print("start ap mode")
-  wifi.setmode(wifi.SOFTAP)
-  wifi.ap.config({ssid="ESP8266_"..node.chipid(),pwd="NodeMCU!"}) -- cfg and cfg.key})
-  wifi.ap.setip({ip="192.168.82.1",netmask="255.255.255.0",gateway="192.168.82.1"})
-  wifi.ap.dhcp.config({start="192.168.82.100"})
+ if gpio.read(key2_pin) == key2_on then
+  print("start enduser setup")
+  ws2812.init()
+  ws2812.write(string.char(0,0,128))
+  wifi.sta.config("","")
+  enduser_setup.start( function()
+    print("Connected to wifi as:" .. wifi.sta.getip())
+   end, function(err,str)
+    print("enduser setup error " .. err .. ": " .. str)
+   end)
  else
   print("start station mode")
   wifi.setmode(wifi.STATION)
-  wifi.sta.config(cfg.ssid,cfg.key)
+  if cfg.ssid then wifi.sta.config(cfg.ssid,cfg.key) end
  end
 -- -- Press button within another 500ms to skip autostart
 -- tmr.alarm(0, 500, 0, function()
-  if gpio.read(key1_pin) ~= key1_on then
+  if gpio.read(key1_pin) ~= key1_on and gpio.read(key2_pin) ~= key2_on then
    print("start autostart")
    pcall(function() dofile("autostart.lua") end)
   else
