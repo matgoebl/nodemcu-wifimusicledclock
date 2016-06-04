@@ -1,6 +1,6 @@
 NodeMCU-WifiMusicLedClock
 =========================
-(c) 2015-2016 Matthias Goebl <matthias.goebl@goebl.net> 
+(c) 2015-2016 Matthias Goebl <matthias.goebl@goebl.net>  
 Published under the MIT License.
 
 A gadget that uses a ring of ws2812 RGB LEDs to display the time or a running light,
@@ -19,6 +19,7 @@ Hardware
  - GPIO2: 24-led ws2812 via 330R
  - GPIO4: Speaker to Vcc via 100R
 
+[first two prototypes](wifimusicledclocks.jpg?raw=true "first two prototypes")
 
 Software
 --------
