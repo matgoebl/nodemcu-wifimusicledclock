@@ -1,5 +1,5 @@
 local clock_tmr=5
-local clock_int=60000
+local clock_int=30000
 local clock_int_demo=50
 local clock_warn=4*clock_int
 
@@ -31,7 +31,7 @@ function clock(run)
   nettime(show_clock)
   tmr.alarm(clock_tmr, clock_int, 1, function()
    if(status.clkup+clock_warn<status.uptime_ms) then
-     rgbset(nil,{pattern="700700",ms=0,norepeat="1"})
+     rgbset(nil,{pattern="700700700700",ms=0,norepeat="1"})
    end
    nettime(show_clock)
   end)
@@ -57,6 +57,6 @@ function clockmode(n)
    mqc:publish(mqid.."/button",n,0,0)
    rgbset(nil,{pattern=string.rep("00F",n),ms=0,norepeat="1"})
   end
-  tmr.alarm(clock_tmr, 3000, 0, clock)
+  tmr.alarm(clock_tmr, 3000, 0, function() clock(true) end)
  end
 end

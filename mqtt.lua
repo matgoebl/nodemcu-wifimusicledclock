@@ -17,17 +17,17 @@ mqsub[mqid.."/play"]=function(m,t,d)
  play(tonumber(p.s),tonumber(p.p),p.m,p.b)
 end
 
-local mqpubstatus=function()
- if not status.mq_on then return end
- status.heap=node.heap()
- status.uptime_s=tmr.time()
- status.counter_us=tmr.now()
- local ssid, password, bssid_set, bssid = wifi.sta.getconfig()
- status.wifi={ssid,bssid}
- local ip,mask,gw = wifi.sta.getip()
- status.ip={ip,mask,gw}
- mqc:publish(mqid.."/status", cjson.encode(status), 0, 1)
-end
+--local mqpubstatus=function()
+-- if not status.mq_on then return end
+-- status.heap=node.heap()
+-- status.uptime_s=tmr.time()
+-- status.counter_us=tmr.now()
+-- local ssid, password, bssid_set, bssid = wifi.sta.getconfig()
+-- status.wifi={ssid,bssid}
+-- local ip,mask,gw = wifi.sta.getip()
+-- status.ip={ip,mask,gw}
+-- mqc:publish(mqid.."/status", cjson.encode(status), 0, 1)
+--end
 
 mqc:lwt(mqid.."/conn", "offline", 0, 1)
 
@@ -58,8 +58,8 @@ mqconnect=function()
     print("mqtt online")
     status.mq_on = true
     mqc:publish(mqid.."/conn", "online", 0, 1)
-    mqpubstatus()
-    tmr.alarm(mq_tmr, 60000, 1, mqpubstatus)
+--    mqpubstatus()
+--    tmr.alarm(mq_tmr, 60000, 1, mqpubstatus)
    end)
   end,
   function(m,e)
