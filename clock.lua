@@ -1,6 +1,6 @@
 local clock_tmr=5
 local clock_int=30000
-local clock_int_demo=50
+local clock_int_demo=16
 local clock_warn=4*clock_int
 
 local show_clock=function(ts,h,m,s)
