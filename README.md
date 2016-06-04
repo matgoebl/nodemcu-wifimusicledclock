@@ -19,7 +19,7 @@ Hardware
  - GPIO2: 24-led ws2812 via 330R
  - GPIO4: Speaker to Vcc via 100R
 
-[first two prototypes](wifimusicledclocks.jpg?raw=true "first two prototypes")
+![first two prototypes](wifimusicledclocks.jpg?raw=true "first two prototypes")
 
 Software
 --------
