@@ -1,6 +1,6 @@
 NodeMCU-WifiMusicLedClock
 =========================
-(c) 2015-2016 Matthias Goebl <matthias.goebl@goebl.net>
+(c) 2015-2016 Matthias Goebl <matthias.goebl@goebl.net> 
 Published under the MIT License.
 
 A gadget that uses a ring of ws2812 RGB LEDs to display the time or a running light,
@@ -19,11 +19,11 @@ Hardware
  - GPIO2: 24-led ws2812 via 330R
  - GPIO4: Speaker to Vcc via 100R
 
-![first two prototypes](wifimusicledclocks.jpg?raw=true "first two prototypes")
 
 Software
 --------
-- [NodeMCU](https://github.com/nodemcu/nodemcu-firmware), tested with `NodeMCU 1.5.1 build 20160121 powered by Lua 5.1.4 on SDK 1.5.1(e67da894)`
+- [NodeMCU](https://github.com/nodemcu/nodemcu-firmware), tested with [NodeMCU custom build](http://nodemcu-build.com/) from [master on 2016-06-04](https://github.com/nodemcu/nodemcu-firmware/commit/cdaf6344457ae427d8c06ac28a645047f9e0f588)
+with SSL and those modules adc,bit,cjson,coap,crypto,dht,enduser_setup,file,gpio,http,i2c,mdns,mqtt,net,node,ow,pwm,rtcfifo,rtcmem,rtctime,sntp,tmr,uart,wifi,ws2812
 - [luatool with binary mode via network](https://github.com/matgoebl/luatool)
 - The *.lua files here, starts up with init.lua
 
