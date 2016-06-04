@@ -67,6 +67,7 @@ tmr.alarm(0, 1000, 0, function()
 -- Press button 1 within 1000ms to skip autostart
   if gpio.read(key1_pin) ~= key1_on and gpio.read(key2_pin) ~= key2_on then
    print("autostart")
+   ws2812.write(string.char(128,0,0))
    pcall(function() dofile("autostart.lua") end)
   else
 -- Hold button 1 for 6000ms total to start an remote update

@@ -13,7 +13,7 @@ install:
 
 bootstrap:
 	#nodemcu-uploader.py --port=$(ESPDEV) upload init.lua config.lua updater.lua
-	for i in init.lua update.lua config.lua; do \
+	for i in update.lua init.lua; do \
 	 luatool.py --port $(ESPDEV) --baud $(ESPBAUD) --verbose --strip-whitespace --src $$i || exit 1; done
 
 reset:
