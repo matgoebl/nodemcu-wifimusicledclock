@@ -14,7 +14,7 @@ local show_clock=function(ts,h,m,s)
   rgb_buf:set(i,16,0,0)
  end
  if hp == mp then
-  rgb_buf:set(hp,rgb_dim,0,rgb_dim)
+  rgb_buf:set(hp,0,rgb_dim,rgb_dim)
  else
   rgb_buf:set(hp,0,rgb_dim,0)
   rgb_buf:set(mp,0,0,rgb_dim)
