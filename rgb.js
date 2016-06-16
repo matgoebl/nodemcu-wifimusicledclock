@@ -100,5 +100,6 @@ function pickc(div,i) {
     //rgbList=rgbList.substring(1);
     //use_pwm= document.getElementById("use_pwm").checked ? "1" : "0";
     //espAPI("rgb?pattern="+rgbList+"&pwm="+use_pwm)
-    updateRgb("&pattern="+rgbList)
+    repeat= document.getElementById("repeat").checked ? "1" : "0";
+    updateRgb("&p="+rgbList+"&rep="+repeat)
 }

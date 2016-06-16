@@ -38,17 +38,17 @@ function rgbset(c,p)
 --  if p.fade then
    rgb_fade= tonumber(p.fade) or 0
 --  end
-  if p.pattern then
+  if p.p then
    local t={}
-   for g,r,b in p.pattern:gmatch("(%x)(%x)(%x)") do table.insert(t,string.char(rgb_brights[tonumber(r,16)+1])..string.char(rgb_brights[tonumber(g,16)+1])..string.char(rgb_brights[tonumber(b,16)+1])) end
-   p.pattern=nil
+   for g,r,b in p.p:gmatch("(%x)(%x)(%x)") do table.insert(t,string.char(rgb_brights[tonumber(r,16)+1])..string.char(rgb_brights[tonumber(g,16)+1])..string.char(rgb_brights[tonumber(b,16)+1])) end
+   p.p=nil
    rgb_pattern=table.concat(t)
    t=nil
    collectgarbage()
-   if p.norepeat then
-    rgb_pattern=rgb_pattern..string.char(0):rep(rgb_max*3-rgb_pattern:len())
-   else
+   if p.rep=="1" then
     rgb_pattern=rgb_pattern:rep(((rgb_max*3-1)/rgb_pattern:len())+1)
+   else
+    rgb_pattern=rgb_pattern..string.char(0):rep(rgb_max*3-rgb_pattern:len())
    end
    rgb_pos=0
   end

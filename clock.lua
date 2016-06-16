@@ -27,11 +27,11 @@ function clock(run)
  tmr.stop(clock_tmr)
  if run then
   status.clkup=0
-  rgbset(nil,{pattern="770770770",ms=0,norepeat="1"})
+  rgbset(nil,{p="770770770",ms=0})
   nettime(show_clock)
   tmr.alarm(clock_tmr, clock_int, 1, function()
    if(status.clkup+clock_warn<status.uptime_ms) then
-     rgbset(nil,{pattern="700700700700",ms=0,norepeat="1"})
+     rgbset(nil,{p="700700700700",ms=0})
    end
    nettime(show_clock)
   end)
@@ -51,11 +51,11 @@ function clockmode(n)
   if n==-1 then n=2 end
   if cfg.trigurl then
    http.get(string.format(cfg.trigurl,n))
-   rgbset(nil,{pattern=string.rep("00F",n),ms=0,norepeat="1"})
+   rgbset(nil,{p=string.rep("00F",n),ms=0})
   end
   if status.mq_on then
    mqc:publish(mqid.."/button",n,0,0)
-   rgbset(nil,{pattern=string.rep("00F",n),ms=0,norepeat="1"})
+   rgbset(nil,{p=string.rep("00F",n),ms=0})
   end
   tmr.alarm(clock_tmr, 3000, 0, function() clock(true) end)
  end

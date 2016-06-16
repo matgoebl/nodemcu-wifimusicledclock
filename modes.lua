@@ -30,11 +30,11 @@ function rgbmode(n)
  end
  local p = rgb_presets[rgb_preset_current+1]
  if n == 0 then
-  rgbset(nil,{pattern=p.."000000000",ms=10,step=-1,norepeat=1,fade=2})
+  rgbset(nil,{p=p.."000000000",ms=10,step=-1,fade=2})
  else
-  rgbset(nil,{pattern=p,ms=50,step=1})
+  rgbset(nil,{p=p,ms=50,step=1,rep="1"})
  end
---   rgbset(nil,{pattern=patterns[key_mode+1].."000000000",ms=100})
+--   rgbset(nil,{p=patterns[key_mode+1].."000000000",ms=100})
 --rgbx={"F00","0F0","00F","FFF","888","333","111","000"}
 end
 
@@ -42,7 +42,7 @@ modes={clockmode,melodymode,rgbmode}
 
 function modeset(n)
  collectgarbage()
- rgbset(nil,{pattern="000",ms=0})
+ rgbset(nil,{p="000",ms=0,rep="1"})
  play(nil)
  clock(nil)
  collectgarbage()

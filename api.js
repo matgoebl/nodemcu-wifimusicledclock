@@ -18,9 +18,8 @@
 
 function updateRgb(params,fast) {
  if(fast&&espAPI_pending) return;
- use_pwm= document.getElementById("use_pwm").checked ? "1" : "0";
  if(params==null) params=""
- espAPI("rgb?ms="+document.getElementById("speed").value+"&step="+document.getElementById("step").value+"&pwm="+use_pwm+params);
+ espAPI("rgb?ms="+document.getElementById("speed").value+"&step="+document.getElementById("step").value+params);
 }
 
 
