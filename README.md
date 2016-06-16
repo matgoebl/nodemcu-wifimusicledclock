@@ -14,10 +14,10 @@ Hardware
  - Wemos.cc D1 mini
  - WS2812 LED ring
 - Circuitry:
- - GPIO0: "MODE" Button to GND
- - GPIO15: "SELECT" Button to Vcc
- - GPIO2: 24-led ws2812 via 330R
- - GPIO4: Speaker to Vcc via 100R
+ - GPIO0/D3: "MODE" Button to GND
+ - GPIO15/D8: "SELECT" Button to Vcc
+ - GPIO2/D4: 24-led ws2812 via 330R
+ - GPIO4/D2: Speaker to Vcc via 100R
 
 ![first two prototypes](wifimusicledclocks.jpg?raw=true "first two prototypes")
 
