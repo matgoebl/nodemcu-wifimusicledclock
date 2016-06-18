@@ -7,6 +7,7 @@ local show_clock=function(ts,h,m,s)
  rgb_buf:fill(0,0,0)
  local hp=(math.floor(h*rgb_max/12)+rgb_max/2)%rgb_max+1
  local mp=(math.floor(m*rgb_max/60)+rgb_max/2)%rgb_max+1
+ if m>=30 then hp=hp+1 end
  for i=1,rgb_max,2 do
   rgb_buf:set(i,2,0,0)
  end
