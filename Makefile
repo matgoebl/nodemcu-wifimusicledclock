@@ -1,7 +1,9 @@
 ESPCONN?=esp:8266
 ESPBAUD?=115200
-ESPDEV?=/dev/ttyUSB0
+ESPDEV?=/dev/ttyUSB0 #for WeMos D1: /dev/serial/by-id/usb-1a86_USB2.0-Serial-if00-port0
 ESPAUTH?=""
+NODEMCUUPLOADER=python nodemcu-uploader/nodemcu-uploader.py --port=$(ESPDEV) --baud $(ESPBAUD) #--verbose
+ESPTOOL=python esptool/esptool.py --port=$(ESPDEV)
 
 install:
 	# autostart.lua at the end
@@ -11,18 +13,38 @@ install:
 	for i in index.html api.js rgb.js; do \
 	 luatool.py --ip $(ESPCONN) --auth "$(ESPAUTH)" --verbose --binary --src $$i; done
 
-bootstrap:
-	#nodemcu-uploader.py --port=$(ESPDEV) upload init.lua config.lua updater.lua
-	for i in update.lua init.lua; do \
-	 luatool.py --port $(ESPDEV) --baud $(ESPBAUD) --verbose --strip-whitespace --src $$i || exit 1; done
+nodemcu-uploader/nodemcu-uploader.py:
+	git clone https://github.com/matgoebl/nodemcu-uploader
+
+
+bootstrap: nodemcu-uploader/nodemcu-uploader.py
+	$(NODEMCUUPLOADER) file format
+	$(NODEMCUUPLOADER) upload update.lua init.lua
+	$(NODEMCUUPLOADER) file list
+	$(NODEMCUUPLOADER) node restart
+	#for i in updater.lua init.lua; do \
+	# luatool.py --port $(ESPDEV) --baud $(ESPBAUD) --verbose --strip-whitespace --src $$i || exit 1; done
 
 reset:
-	luatool.py --port $(ESPDEV) --baud $(ESPBAUD) --verbose --restart
+	$(NODEMCUUPLOADER) node restart
+	$(NODEMCUUPLOADER) node heap
+	#luatool.py --port $(ESPDEV) --baud $(ESPBAUD) --verbose --restart
 
 format:
-	luatool.py --port $(ESPDEV) --baud $(ESPBAUD) --verbose --execute "file.format()"
-	sleep 60
+	$(NODEMCUUPLOADER) file format
+	#luatool.py --port $(ESPDEV) --baud $(ESPBAUD) --verbose --execute "file.format()"
+	#sleep 60
 
-flash_nodemcu_dev:
-	esptool.py --port=$(ESPDEV) write_flash 0x00000 0x00000.bin
-	esptool.py --port=$(ESPDEV) write_flash 0x10000 0x10000.bin
+
+esptool/esptool.py:
+	git clone https://github.com/themadinventor/esptool
+
+nodemcu-master-25-modules-2016-06-04-14-47-40-integer.bin:
+	wget https://github.com/matgoebl/nodemcu-wifimusicledclock/releases/download/v2.0/nodemcu-master-25-modules-2016-06-04-14-47-40-integer.bin
+
+flash:	nodemcu-master-25-modules-2016-06-04-14-47-40-integer.bin esptool/esptool.py
+	$(ESPTOOL) write_flash 0x0 nodemcu-master-25-modules-2016-06-04-14-47-40-integer.bin
+
+flash_nodemcu_dev: esptool/esptool.py
+	$(ESPTOOL) write_flash 0x00000 0x00000.bin
+	$(ESPTOOL) write_flash 0x10000 0x10000.bin

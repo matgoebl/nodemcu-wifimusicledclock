@@ -23,13 +23,18 @@ Hardware
 
 Software
 --------
-- [NodeMCU](https://github.com/nodemcu/nodemcu-firmware), tested with [NodeMCU custom build](http://nodemcu-build.com/) from [master on 2016-06-04](https://github.com/nodemcu/nodemcu-firmware/commit/cdaf6344457ae427d8c06ac28a645047f9e0f588)
-with SSL and those modules adc,bit,cjson,coap,crypto,dht,enduser_setup,file,gpio,http,i2c,mdns,mqtt,net,node,ow,pwm,rtcfifo,rtcmem,rtctime,sntp,tmr,uart,wifi,ws2812
+- [NodeMCU](https://github.com/nodemcu/nodemcu-firmware), tested with
+ [this](https://github.com/matgoebl/nodemcu-wifimusicledclock/releases/download/v2.0/nodemcu-master-25-modules-2016-06-04-14-47-40-integer.bin)
+ [NodeMCU custom build](http://nodemcu-build.com/) from [master on 2016-06-04](https://github.com/nodemcu/nodemcu-firmware/commit/cdaf6344457ae427d8c06ac28a645047f9e0f588)
+ integer flavour with SSL and those modules adc,bit,cjson,coap,crypto,dht,enduser_setup,file,gpio,http,i2c,mdns,mqtt,net,node,ow,pwm,rtcfifo,rtcmem,rtctime,sntp,tmr,uart,wifi,ws2812
+- [ESPTool](https://github.com/themadinventor/esptool)
+- [NodeMCU-Uploader with autobaud fix](https://github.com/matgoebl/nodemcu-uploader), [aupstream version](https://github.com/kmpm/nodemcu-uploader)
 - [luatool with binary mode via network](https://github.com/matgoebl/luatool)
 - The *.lua files here, starts up with init.lua
 
 ### Install
-    make ESPDEV=/dev/ttyUSB0 format bootstrap reset
+    make ESPDEV=/dev/ttyUSB0 flash
+    make ESPDEV=/dev/ttyUSB0 bootstrap
     make ESPCONN=esp:8266 install
 
 
@@ -63,14 +68,12 @@ Display Modes
 
 Initial Setup
 -------------
-This starts up in a default accesspoint mode, also useful as failsafe access.
+This starts up in end user setup mode with an open access point
 
 - Press RESET, release RESET, press SELECT(blue) for 1 second (AFTER releasing RESET)
-- Connect to SSID "ESP8266_*" with key "NodeMCU!"
-- Open http://192.168.82.1:8266
-- At Config enter:
- - SSID <your SSID>, press save
- - Change to key, enter <key>, press save
-- Check http://192.168.82.1:8266/cfg
-- Reset
-- It should then connect to your wlan (press 4x"MODE" to update status in IoT Mode).
+- Connect to SSID "SetupGadget.."
+- Select your WIFI and enter your key
+- Press RESET
+- It should then connect to your wlan
+- Find out the IP address of your device from your DHCP server
+- Connect to http://IP:8266/
