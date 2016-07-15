@@ -1,8 +1,8 @@
-local wifi_tmr=6
-local wifi_int=10000
+--local wifi_tmr=6
+--local wifi_int=10000
 
-tmr.alarm(wifi_tmr, wifi_int, 1, function()
- if(wifi.sta.getip()==nil) then
+--tmr.alarm(wifi_tmr, wifi_int, 1, function()
+-- if(wifi.sta.getip()==nil) then
   wifi.sta.getap(1, function(ap_list)
    if ap_list==nil then return end
    local best_ssid=nil
@@ -25,5 +25,5 @@ tmr.alarm(wifi_tmr, wifi_int, 1, function()
     wifi.sta.config(best_ssid,best_key)
    end
   end)
- end
-end)
+-- end
+--end)

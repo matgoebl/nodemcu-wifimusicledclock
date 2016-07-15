@@ -1,19 +1,17 @@
-function savecfg(k,v)
- if k then cfg[k] = v end
+function cmd.cfg(p)
  if not cfg.ssid then
   cfg.ssid,cfg.key = wifi.sta.getconfig()
  end
+ for k,v in pairs(p) do
+  cfg[k] = v
+ end
  if file.open("config.lua","w+") then
-  file.write("cfg={")
+  file.write('cfg={\n')
    for k,v in pairs(cfg) do
-    file.write(k..'="'..v..'",')
+    file.write(k..'="'..v..'",\n')
    end
   file.write("m=1}\n")
   file.close()
  end
  return cfg
-end
-
-url_handlers["/cfg"] = function(c,p)
- return savecfg(p.k,p.v)
 end

@@ -43,6 +43,8 @@ function play(s,p,m,b,i,o)
  else
   pwm.stop(beep_pin)
  end
+ if s==nil then s=125 end
+ if p==nil then p=20 end
  if m==nil then m="" end
  local t,q,v,z=m:match("^([xX]?%a[vV]?)(/?)(%d*)([^a-zA-Z0-9]*)",o)
  if t == nil then  -- end of melody
@@ -88,7 +90,7 @@ function play(s,p,m,b,i,o)
  end)
 end
 
-url_handlers["/melody"] = function(c,p)
+function cmd.melody(p)
  play(tonumber(p.s),tonumber(p.p),p.m,p.b)
  return ({})
 end

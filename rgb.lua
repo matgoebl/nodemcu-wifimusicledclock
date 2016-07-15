@@ -30,7 +30,7 @@ local function rgb_update()
  end
 end
 
-function rgbset(c,p)
+function rgbset(p)
   tmr.stop(rgb_tmr)
   if p.step then
    rgb_step= tonumber(p.step) or 1
@@ -62,4 +62,8 @@ function rgbset(c,p)
   return ({})
 end
 
-url_handlers["/rgb"] = rgbset
+function rgb(pattern)
+ rgbset({p=pattern,ms=0})
+end
+
+cmd.rgb=rgbset

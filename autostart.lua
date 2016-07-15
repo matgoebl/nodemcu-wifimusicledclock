@@ -1,3 +1,7 @@
+cmd={}
+status={}
+status.version="2.1"
+
 dofile("compile.lua")
 dofile("http.lc")
 dofile("rgb.lc")
@@ -7,10 +11,19 @@ dofile("clock.lc")
 dofile("modes.lc")
 dofile("cfgedit.lc")
 dofile("twokeys.lc")
-dofile("wifiautoconnect.lc")
+--dofile("wifiautoconnect.lc")
+ local wifi_tmr=6
+ local wifi_int=10000
+ tmr.alarm(wifi_tmr, wifi_int, 1, function()
+  if(wifi.sta.getip()==nil) then
+   dofile("wifiautoconnect.lc")
+  end
+ end)
+
 dofile("mqtt.lc")
 
-rgbset(nil,{p="770070",ms=0})
+rgb("770070")
+h1=node.heap()
 
 tmr.alarm(0,5000,1, function()
  local ip = wifi.sta.getip()
@@ -29,8 +42,11 @@ tmr.alarm(0,5000,1, function()
    end
   end
  end
- rgbset(nil,{p=p,ms=0})
+ rgb(p)
  tmr.alarm(0,10000,1, function()
+  collectgarbage()
+  h3=node.heap()
   modeset(0)
  end)
 end)
+h2=node.heap()
