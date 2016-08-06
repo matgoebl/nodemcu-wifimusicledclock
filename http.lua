@@ -90,3 +90,13 @@ function cmd.reset()
  end)
  return {}
 end
+
+function cmd.upgrade()
+ tmr.alarm(http_tmr, 1000, 0, function()
+  file.open("autostart.lua","w+")
+  file.write('dofile("update.lua")')
+  file.close()
+  node.restart()
+ end)
+ return {}
+end
