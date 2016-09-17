@@ -24,7 +24,7 @@ dofile("mqtt.lc")
 rgb("770070")
 h1=node.heap()
 
-tmr.alarm(0,5000,1, function()
+tmr.alarm(0,8000,1, function()
  local ip = wifi.sta.getip()
  local a,b,c=string.match(ip or "","%d+.%d+.%d+.(%d)(%d?)(%d?)")
  local p="700700700700"

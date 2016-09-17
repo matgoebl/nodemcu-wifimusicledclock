@@ -35,7 +35,6 @@ local tones={
 function play(s,p,m,b,i,o)
  -- s: tone length  p: inter-tone pause  m: music string in abc format  b: visualize tones with rgb leds
  tmr.stop(beep_tmr)
- status.playing=true
  if i == nil then  -- init
   gpio.mode(beep_pin,gpio.OUTPUT)
   i=1  -- tone number, for blinking
@@ -50,9 +49,15 @@ function play(s,p,m,b,i,o)
  if t == nil then  -- end of melody
   pwm.stop(beep_pin)  
   gpio.mode(beep_pin,gpio.INPUT)  
+  if status.playing==true and tonumber(cfg.returnmain) and b then
+   tmr.alarm(beep_tmr,tonumber(cfg.returnmain),0, function()
+    modeset(0)
+   end)
+  end
   status.playing=false
   return
  end
+ status.playing=true
  -- print(t,q,v)
  local d=s
  if v and v~="" then
