@@ -30,7 +30,7 @@ mqc:on("message", function(m,t,d)
 end)
 
 mqconnect=function()
- print("mqtt connecting to ",cfg.mqhost,":",cfg.mqport," ssl:",cfg.mqtls)
+ print("mqtt connecting",cfg.mqhost,":",cfg.mqport," ssl:",cfg.mqtls)
  collectgarbage()
  mqc:connect(cfg.mqhost, cfg.mqport and tonumber(cfg.mqport) or 1883, cfg.mqtls=="1" and 1 or 0, 0,
   function(m)
@@ -51,4 +51,4 @@ mqconnect=function()
  )
 end
 
-tmr.alarm(mq_tmr, 5000, 0, mqconnect)
+mqconnect()

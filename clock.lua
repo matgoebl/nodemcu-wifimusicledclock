@@ -24,7 +24,7 @@ local show_clock=function(h,m)
 end
 
 local update_clock=function()
- sntp.sync('ntp1.ptb.de',
+ sntp.sync(cfg.ntphost or 'ntp1.ptb.de',
   function(ts)
    local tz=1 -- normal/wintertime
    -- Daylight-Saving Times 2016-2027 for Europe

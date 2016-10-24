@@ -4,7 +4,7 @@ NodeMCU-WifiMusicLedClock
 Published under the MIT License.
 
 A gadget that uses a ring of ws2812 RGB LEDs to display the time or a running light,
-plays melodies, calls HTTP trigger on a button press and provides a http API.
+plays melodies, calls HTTP trigger on a button press and provides an http API.
 
 
 Hardware
@@ -17,7 +17,8 @@ Hardware
  - GPIO0/D3: "MODE" Button to GND
  - GPIO15/D8: "SELECT" Button to Vcc
  - GPIO2/D4: 24-led ws2812 via 330R
- - GPIO4/D2: Speaker to Vcc via 100R
+ - GPIO4/D2: Speaker to Vcc via 100R (optional)
+ - GPIO12/D6: data pin of DS18B20 one-wire temperature sensor (optional)
 
 ![first two prototypes](wifimusicledclocks.jpg?raw=true "first two prototypes")
 
@@ -75,5 +76,11 @@ This starts up in end user setup mode with an open access point
 - Select your WIFI and enter your key
 - Press RESET
 - It should then connect to your wlan
-- Find out the IP address of your device from your DHCP server
+- Find out the IP address of your device
+-- from your DHCP server
+-- from the console
+-- from the initial led pattern (shows the last octet of your ip)
+--- the number of green leds indicates the first digit
+--- the number of yellow leds indicates the second digit
+--- the number of blue leds indicates the third digit
 - Connect to http://IP:8266/

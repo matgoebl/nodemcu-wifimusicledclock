@@ -1,6 +1,6 @@
 cmd={}
 status={}
-status.version="2.1"
+status.version="2.2"
 
 dofile("compile.lua")
 dofile("http.lc")
@@ -10,19 +10,8 @@ dofile("clock.lc")
 dofile("modes.lc")
 dofile("cfgedit.lc")
 dofile("twokeys.lc")
---dofile("wifiautoconnect.lc")
- local wifi_tmr=6
- local wifi_int=10000
- tmr.alarm(wifi_tmr, wifi_int, 1, function()
-  if(wifi.sta.getip()==nil) then
-   dofile("wifiautoconnect.lc")
-  end
- end)
-
-dofile("mqtt.lc")
 
 rgb("770070")
-h1=node.heap()
 
 tmr.alarm(0,8000,1, function()
  local ip = wifi.sta.getip()
@@ -31,6 +20,8 @@ tmr.alarm(0,8000,1, function()
  local n
  n=tonumber(a)
  if n ~= nil then
+  local ssid, password, bssid_set, bssid = wifi.sta.getconfig()
+  print("wifi connected",ssid,ip)
   p="000"..string.rep("070",n)
   n=tonumber(b)
   if n ~= nil then
@@ -42,10 +33,27 @@ tmr.alarm(0,8000,1, function()
   end
  end
  rgb(p)
+
+ dofile("mqtt.lc")
+
+ local wifi_tmr=6
+ local wifi_int=10000
+ tmr.alarm(wifi_tmr, wifi_int, 1, function()
+  if(wifi.sta.getip()==nil) then
+   dofile("wifiautoconnect.lc")
+  end
+  if status.mode == 0 then
+   status.temp = dofile("owtemp.lc")
+  else
+   status.temp = nil
+  end
+ end)
+
  tmr.alarm(0,10000,1, function()
   collectgarbage()
-  h3=node.heap()
   modeset(0)
  end)
+
+ pcall(function() dofile("user.lua") end)
+
 end)
-h2=node.heap()
