@@ -74,13 +74,30 @@ This starts up in end user setup mode with an open access point
 - Press RESET, release RESET, press SELECT(blue) for 1 second (AFTER releasing RESET)
 - Connect to SSID "SetupGadget.."
 - Select your WIFI and enter your key
-- Press RESET
+- Click OK
+- Press RESET again
 - It should then connect to your wlan
 - Find out the IP address of your device
--- from your DHCP server
--- from the console
--- from the initial led pattern (shows the last octet of your ip)
---- the number of green leds indicates the first digit
---- the number of yellow leds indicates the second digit
---- the number of blue leds indicates the third digit
+ - from your DHCP server
+ - from the console
+ - from the initial led pattern (shows the last octet of your ip)
+  - the number of green leds indicates the first digit
+  - the number of yellow leds indicates the second digit
+  - the number of blue leds indicates the third digit
 - Connect to http://IP:8266/
+
+
+
+Network Upgrade
+---------------
+The gadget is able to upgrade itself directly from [githup](https://github.com/matgoebl/nodemcu-wifimusicledclock/blob/master/updater.lua).
+
+- Press RESET (or hold Left/MODE Button for 3 seconds)
+- Press Left/MODE Button for 6 seconds
+- After optaining an IP address, the network upgrade starts
+- The number of yellow LEDs indicates the number of files to download
+- After downloading each file, the corresponding LED changes to green
+- In case of an error
+ - The LED changes to red and the update stops
+ - Press RESET to restart the process, then MODE for 6 seconds, etc.
+ - You need one successful upgrade cycle to proceed (the autostart.lua file has beed deleted initially to prevent half-finished upgrades)
