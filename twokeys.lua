@@ -13,6 +13,18 @@ status.uptime_ms=0
 gpio.mode(key1_pin,gpio.INPUT,gpio.PULLUP)
 gpio.mode(key2_pin,gpio.INPUT,gpio.PULLDOWN)
 
+local wifi_max_outage=10000
+local wifi_check_int=1000
+local wifi_outage=0
+
+local owtemp_int = 5000
+
+local ldr_pin=5 -- GPIO14
+local ldr_t0=0
+local ldr_int = 2000
+
+status.wifi_reconns = 0
+
 tmr.alarm(key_tmr, key_int, 1, function()
  status.uptime_ms=status.uptime_ms+key_int
 
@@ -53,4 +65,43 @@ tmr.alarm(key_tmr, key_int, 1, function()
   end
   key2_len=0
  end
+
+ --- Wifi Check (should one time use callback registry and go into into own file - but new files complicate the upgrade process)
+ if status.uptime_ms % wifi_check_int == 0 then
+  if(wifi.sta.getip()==nil) then
+   wifi_outage = wifi_outage + wifi_check_int
+   if wifi_outage >= wifi_max_outage then
+    status.wifi_reconns = status.wifi_reconns + 1
+    dofile("wifiautoconnect.lc")
+    wifi_outage = 0
+   end
+  else
+   wifi_outage = 0
+  end
+ end
+
+ if status.uptime_ms % owtemp_int == 0 then
+  if status.mode == 0 then
+   status.temp = dofile("owtemp.lc")
+  else
+   status.temp = nil
+  end
+ end
+
+ if status.uptime_ms % ldr_int == 0 then
+  if ldr_t0 > 0 then status.ldr=-1 end
+  gpio.trig(ldr_pin,"none")
+  gpio.mode(ldr_pin,gpio.OUTPUT)
+  gpio.write(ldr_pin,gpio.LOW)
+ end
+ if status.uptime_ms % ldr_int == ldr_int/10 then
+  gpio.mode(ldr_pin,gpio.INPUT,gpio.FLOAT)
+  ldr_t0=tmr.now()
+  gpio.trig(ldr_pin,"high",function(level)
+   status.ldr=tmr.now()-ldr_t0
+   ldr_t0=0
+   gpio.trig(ldr_pin,"none")
+  end)
+ end
+
 end)

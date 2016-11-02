@@ -6,6 +6,7 @@ local mq_tmr=4
 mqid = cfg.mqid or "esp8266_"..wifi.sta.getmac()
 mqc = mqtt.Client(mqid, 60, cfg.mquser or "", cfg.mqpass or "")
 status.mq_on = false
+status.mq_reconns = 0
 
 local mqsub=mqid.."/cmd/+"
 
@@ -14,6 +15,7 @@ mqc:lwt(mqid.."/conn", "offline", 0, 1)
 mqc:on("offline", function(conn)
  status.mq_on = false
  print("mqtt offline")
+ status.mq_reconns = status.mq_reconns + 1
  tmr.alarm(mq_tmr, 5000, 0, mqconnect)
 end)
 

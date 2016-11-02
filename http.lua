@@ -1,7 +1,5 @@
 -- handler for http requests via init_wifi_telnethttpd.lua
 
-local http_tmr=0
-
 local sendfile = function(c,f)
  local pos=0
  local run=coroutine.yield()
@@ -62,9 +60,9 @@ end
 
 function cmd.status()
 --  if p.measure then
---   tmr.alarm(http_tmr, 1000, 0, function()
+--   tmr.alarm(tmp_tmr, 1000, 0, function()
 --    wifi.sta.disconnect();
---    tmr.alarm(http_tmr, tonumber(p.measure) or 1000, 0, function()
+--    tmr.alarm(tmp_tmr, tonumber(p.measure) or 1000, 0, function()
 --     status.vdd={vdd_ms=adc.readvdd33(),uptime_s=tmr.time()}
 --     wifi.sta.connect(1);
 --    end)
@@ -85,14 +83,14 @@ function cmd.status()
 end
 
 function cmd.reset()
- tmr.alarm(http_tmr, 1000, 0, function()
+ tmr.alarm(tmp_tmr, 1000, 0, function()
   node.restart()
  end)
  return {}
 end
 
 function cmd.upgrade()
- tmr.alarm(http_tmr, 1000, 0, function()
+ tmr.alarm(tmp_tmr, 1000, 0, function()
   file.open("autostart.lua","w+")
   file.write('dofile("update.lua")')
   file.close()

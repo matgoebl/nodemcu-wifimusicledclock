@@ -48,7 +48,7 @@ function modeset(n)
  collectgarbage()
  if n == nil then return end
  status.mode = (status.mode + n + #modes) % #modes
- tmr.alarm(0, 50, 0, function()
+ tmr.alarm(tmp_tmr, 50, 0, function()
   modes[status.mode+1](nil)
  end)
 end

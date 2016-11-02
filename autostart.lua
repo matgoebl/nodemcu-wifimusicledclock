@@ -1,6 +1,7 @@
 cmd={}
 status={}
-status.version="2.2"
+status.version="2.3"
+tmp_tmr=0
 
 dofile("compile.lua")
 dofile("http.lc")
@@ -13,7 +14,7 @@ dofile("twokeys.lc")
 
 rgb("770070")
 
-tmr.alarm(0,8000,1, function()
+tmr.alarm(tmp_tmr,8000,1, function()
  local ip = wifi.sta.getip()
  local a,b,c=string.match(ip or "","%d+.%d+.%d+.(%d)(%d?)(%d?)")
  local p="700700700700"
@@ -36,20 +37,7 @@ tmr.alarm(0,8000,1, function()
 
  dofile("mqtt.lc")
 
- local wifi_tmr=6
- local wifi_int=10000
- tmr.alarm(wifi_tmr, wifi_int, 1, function()
-  if(wifi.sta.getip()==nil) then
-   dofile("wifiautoconnect.lc")
-  end
-  if status.mode == 0 then
-   status.temp = dofile("owtemp.lc")
-  else
-   status.temp = nil
-  end
- end)
-
- tmr.alarm(0,10000,1, function()
+ tmr.alarm(tmp_tmr,10000,1, function()
   collectgarbage()
   modeset(0)
  end)
