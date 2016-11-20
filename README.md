@@ -24,7 +24,7 @@ Hardware
 
 Software
 --------
-- [NodeMCU](https://github.com/nodemcu/nodemcu-firmware), tested with this build
+- [NodeMCU](https://github.com/nodemcu/nodemcu-firmware), tested with the build
  [nodemcu-master-25-modules-2016-06-04-14-47-40-integer.bin](https://github.com/matgoebl/nodemcu-wifimusicledclock/releases/download/v2.0/nodemcu-master-25-modules-2016-06-04-14-47-40-integer.bin)
  (equal to tag [1.5.1-master_20160603](https://github.com/nodemcu/nodemcu-firmware/releases/tag/1.5.1-master_20160603))
  using the [NodeMCU custom build service](http://nodemcu-build.com/) from [master on 2016-06-04](https://github.com/nodemcu/nodemcu-firmware/commit/cdaf6344457ae427d8c06ac28a645047f9e0f588)
@@ -42,13 +42,15 @@ Software
 ### Install on Windows
 - Flash [base nodemcu firmware](https://github.com/matgoebl/nodemcu-wifimusicledclock/releases/download/v2.0/nodemcu-master-25-modules-2016-06-04-14-47-40-integer.bin)
  using [NodeMCU Flasher](https://github.com/nodemcu/nodemcu-flasher/raw/master/Win32/Release/ESP8266Flasher.exe)
+- Format the filesystem using 
+ [ESPlorer](http://esp8266.ru/esplorer-latest/?f=ESPlorer.zip)
 - Upload [init.lua](https://raw.githubusercontent.com/matgoebl/nodemcu-wifimusicledclock/master/init.lua) and
  [update.lua](https://raw.githubusercontent.com/matgoebl/nodemcu-wifimusicledclock/master/update.lua)
- using [ESPlorer](http://esp8266.ru/esplorer-latest/?f=ESPlorer.zip)
+ using ESPlorer
 - Set the WiFi config by sending the following with with ESPlorer: (insert your SSID and the corresponding WPA key)
-    file.open("config.lua","w+") file.write('cfg={ssid="XXX",key="XXX"}') file.close()
+  `file.open("config.lua","w+") file.write('cfg={ssid="XXX",key="XXX"}') file.close()`
 - Force update by sending the following with with ESPlorer:
-    file.open("autostart.lua","w+") file.write('dofile("update.lua")') file.close() node.restart()
+  `file.open("autostart.lua","w+") file.write('dofile("update.lua")') file.close() node.restart()`
 
 User Interface
 ==============
