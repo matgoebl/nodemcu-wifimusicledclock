@@ -24,12 +24,13 @@ Hardware
 
 Software
 --------
-- [NodeMCU](https://github.com/nodemcu/nodemcu-firmware), tested with
- [this](https://github.com/matgoebl/nodemcu-wifimusicledclock/releases/download/v2.0/nodemcu-master-25-modules-2016-06-04-14-47-40-integer.bin)
- [NodeMCU custom build](http://nodemcu-build.com/) from [master on 2016-06-04](https://github.com/nodemcu/nodemcu-firmware/commit/cdaf6344457ae427d8c06ac28a645047f9e0f588)
+- [NodeMCU](https://github.com/nodemcu/nodemcu-firmware), tested with this build
+ [nodemcu-master-25-modules-2016-06-04-14-47-40-integer.bin](https://github.com/matgoebl/nodemcu-wifimusicledclock/releases/download/v2.0/nodemcu-master-25-modules-2016-06-04-14-47-40-integer.bin)
+ (equal to tag [1.5.1-master_20160603](https://github.com/nodemcu/nodemcu-firmware/releases/tag/1.5.1-master_20160603))
+ using the [NodeMCU custom build service](http://nodemcu-build.com/) from [master on 2016-06-04](https://github.com/nodemcu/nodemcu-firmware/commit/cdaf6344457ae427d8c06ac28a645047f9e0f588)
  integer flavour with SSL and those modules adc,bit,cjson,coap,crypto,dht,enduser_setup,file,gpio,http,i2c,mdns,mqtt,net,node,ow,pwm,rtcfifo,rtcmem,rtctime,sntp,tmr,uart,wifi,ws2812
 - [ESPTool](https://github.com/themadinventor/esptool)
-- [NodeMCU-Uploader with autobaud fix](https://github.com/matgoebl/nodemcu-uploader), [aupstream version](https://github.com/kmpm/nodemcu-uploader)
+- [NodeMCU-Uploader with autobaud fix](https://github.com/matgoebl/nodemcu-uploader), [upstream version](https://github.com/kmpm/nodemcu-uploader)
 - [luatool with binary mode via network](https://github.com/matgoebl/luatool)
 - The *.lua files here, starts up with init.lua
 
@@ -38,6 +39,16 @@ Software
     make ESPDEV=/dev/ttyUSB0 bootstrap
     make ESPCONN=esp:8266 install
 
+### Install on Windows
+- Flash [base nodemcu firmware](https://github.com/matgoebl/nodemcu-wifimusicledclock/releases/download/v2.0/nodemcu-master-25-modules-2016-06-04-14-47-40-integer.bin)
+ using [NodeMCU Flasher](https://github.com/nodemcu/nodemcu-flasher/raw/master/Win32/Release/ESP8266Flasher.exe)
+- Upload [init.lua](https://raw.githubusercontent.com/matgoebl/nodemcu-wifimusicledclock/master/init.lua) and
+ [update.lua](https://raw.githubusercontent.com/matgoebl/nodemcu-wifimusicledclock/master/update.lua)
+ using [ESPlorer](http://esp8266.ru/esplorer-latest/?f=ESPlorer.zip)
+- Set the WiFi config by sending the following with with ESPlorer: (insert your SSID and the corresponding WPA key)
+    file.open("config.lua","w+") file.write('cfg={ssid="XXX",key="XXX"}') file.close()
+- Force update by sending the following with with ESPlorer:
+    file.open("autostart.lua","w+") file.write('dofile("update.lua")') file.close() node.restart()
 
 User Interface
 ==============
@@ -90,7 +101,7 @@ This starts up in end user setup mode with an open access point
 
 Network Upgrade
 ---------------
-The gadget is able to upgrade itself directly from [githup](https://github.com/matgoebl/nodemcu-wifimusicledclock/blob/master/updater.lua).
+The gadget is able to upgrade itself directly from github using its [updater](https://github.com/matgoebl/nodemcu-wifimusicledclock/blob/master/updater.lua).
 
 - Press RESET (or hold Left/MODE Button for 3 seconds)
 - Press Left/MODE Button for 6 seconds
@@ -100,4 +111,4 @@ The gadget is able to upgrade itself directly from [githup](https://github.com/m
 - In case of an error
  - The LED changes to red and the update stops
  - Press RESET to restart the process, then MODE for 6 seconds, etc.
- - You need one successful upgrade cycle to proceed (the autostart.lua file has beed deleted initially to prevent half-finished upgrades)
+ - You need one successful upgrade cycle to proceed (the autostart.lua file will be deleted initially to prevent half-finished upgrades)
