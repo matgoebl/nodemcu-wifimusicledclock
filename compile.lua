@@ -10,6 +10,7 @@ local compileall=function()
    end
   end
  end
+ print("compilation done")
 end
 
 compileall()

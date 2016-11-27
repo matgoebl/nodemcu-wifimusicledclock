@@ -40,6 +40,7 @@ tmr.alarm(tmp_tmr,8000,1, function()
  tmr.alarm(tmp_tmr,10000,1, function()
   collectgarbage()
   modeset(0)
+  print("heap",node.heap())
  end)
 
  pcall(function() dofile("user.lua") end)
