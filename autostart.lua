@@ -37,7 +37,7 @@ tmr.alarm(tmp_tmr,8000,1, function()
 
  dofile("mqtt.lc")
 
- tmr.alarm(tmp_tmr,10000,1, function()
+ tmr.alarm(tmp_tmr,10000,0, function()
   collectgarbage()
   modeset(0)
   print("heap",node.heap())
