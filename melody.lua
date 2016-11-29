@@ -53,15 +53,13 @@ local function play(s,p,m,b,i,o)
  local t,q,v,z=m:match("^([xX]?%a[vV]?)(/?)(%d*)([^a-zA-Z0-9]*)",o)
  if t == nil then  -- end of melody
   beep(nil)
-  if status.playing==true and tonumber(cfg.returnmain) and b then
+  if tonumber(cfg.returnmain) then
    tmr.alarm(beep_tmr,tonumber(cfg.returnmain),0, function()
     modeset("clock")
    end)
   end
-  status.playing=false
   return
  end
- status.playing=true
  -- print(t,q,v)
  local d=s
  if v and v~="" then
