@@ -1,17 +1,23 @@
-local rgb_tmr=1
+local M={}
+
+local rgb_presets={
+ "F0080080440800800F0080480840800F0080480840800",
+ "F000000000000F000000000000F000000000",
+-- "F00800400200",
+ "F00000000000",
+ "0F0000000000",
+ "00F000000000",
+ "FFF000000000000000"}
+
+local rgb_preset_current=0
+
 local rgb_pos=0
 local rgb_step=1
 local rgb_ms=0
 local rgb_fade=4
 local rgb_pattern=string.char(0):rep(3)
-rgb_max=cfg.lednum or 24
-rgb_dim=cfg.leddim or 90
 
--- rgb_brights={0, 2, 3, 4, 6, 8, 11, 16, 23, 32, 45, 64, 90, 128, 181, 255}
-local rgb_brights={0, 2, 3, 4, 6, 8, 11, 16, 23, 32, 45, 64, 90, 90, 90, 90}
-
-ws2812.init()
-rgb_buf=ws2812.newBuffer(rgb_max,3)
+local rgb_buf=ws2812.newBuffer(rgb_max,3)
 rgb_buf:fill(0,0,0)
 rgb_buf:write()
 
@@ -26,24 +32,18 @@ local function rgb_update()
  rgb_buf:write()
  rgb_pos=(rgb_pos-3*rgb_step) % rgb_pattern:len()
  if rgb_ms > 0 then
-  tmr.alarm(rgb_tmr, rgb_ms, 0, rgb_update)
+  tmr.alarm(mod_tmr, rgb_ms, 0, rgb_update)
  end
 end
 
-function rgbset(p)
-  tmr.stop(rgb_tmr)
+local function rgbset(p)
+  tmr.stop(mod_tmr)
   if p.step then
    rgb_step= tonumber(p.step) or 1
   end
---  if p.fade then
-   rgb_fade= tonumber(p.fade) or 0
---  end
+  rgb_fade= tonumber(p.fade) or 0
   if p.p then
-   local t={}
-   for g,r,b in p.p:gmatch("(%x)(%x)(%x)") do table.insert(t,string.char(rgb_brights[tonumber(r,16)+1])..string.char(rgb_brights[tonumber(g,16)+1])..string.char(rgb_brights[tonumber(b,16)+1])) end
-   p.p=nil
-   rgb_pattern=table.concat(t)
-   t=nil
+   rgb_pattern=rgbstr(p.p)
    collectgarbage()
    if p.rep=="1" then
     rgb_pattern=rgb_pattern:rep(((rgb_max*3-1)/rgb_pattern:len())+1)
@@ -62,8 +62,24 @@ function rgbset(p)
   return ({})
 end
 
-function rgb(pattern)
- rgbset({p=pattern,ms=0})
+function M.key(n)
+ if n == 1 or n == -1 then
+  rgb_preset_current = (rgb_preset_current + n + #rgb_presets) % #rgb_presets
+ end
+ local p = rgb_presets[rgb_preset_current+1]
+ if n == 0 then
+  rgbset({p=p.."000000000",ms=10,step=-1,fade=2})
+ else
+  rgbset({p=p,ms=50,step=1,rep="1"})
+ end
 end
 
-cmd.rgb=rgbset
+M.cmd = rgbset
+
+function M.stop()
+ tmr.stop(mod_tmr)
+end
+
+M.start=M.key
+
+return M

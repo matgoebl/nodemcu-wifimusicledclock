@@ -1,7 +1,11 @@
-local clock_tmr=5
+local M={}
+
 local clock_int=30000
 local clock_int_demo=16
 local clock_warn=4*clock_int
+
+local rgb_buf=ws2812.newBuffer(rgb_max,3)
+rgb_buf:fill(0,0,0)
 
 local show_clock=function(h,m)
  rgb_buf:fill(0,0,0)
@@ -44,26 +48,30 @@ local update_clock=function()
  )
 end
 
-function clock(run)
- tmr.stop(clock_tmr)
- if run then
-  rgb("770770770")
+function realclock()
+ rgb("770770770")
+ update_clock()
+ tmr.alarm(mod_tmr, clock_int, 1, function()
   update_clock()
-  tmr.alarm(clock_tmr, clock_int, 1, function()
-   update_clock()
-  end)
- end
+ end)
 end
 
 local demo_counter=0
-function clockmode(n)
- if n == nil then
-  clock(true)
- elseif n == 0 then
-  tmr.alarm(clock_tmr, clock_int_demo, 1, function()
-   show_clock(math.floor(demo_counter/60)%24,demo_counter%60)
-   demo_counter=demo_counter+1
-  end)
+function democlock()
+ tmr.alarm(mod_tmr, clock_int_demo, 1, function()
+  show_clock(math.floor(demo_counter/60)%24,demo_counter%60)
+  demo_counter=demo_counter+1
+ end)
+end
+
+function M.key(n)
+ if n == 0 then
+  if demo_counter == 0 then
+   democlock()
+  else
+   demo_counter=0
+   M.start()
+  end
  else
   if n==-1 then n=2 end
   if cfg.trigurl then
@@ -74,6 +82,20 @@ function clockmode(n)
    mqc:publish(mqid.."/button",n,0,0)
    rgb(string.rep("00F",n))
   end
-  tmr.alarm(clock_tmr, 3000, 0, function() clock(true) end)
+  tmr.alarm(mod_tmr, 3000, 0, function() realclock(true) end)
  end
 end
+
+function M.cmd(p)
+ return ({})
+end
+
+function M.stop()
+ tmr.stop(mod_tmr)
+end
+
+function M.start()
+ realclock()
+end
+
+return M

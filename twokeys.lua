@@ -1,9 +1,5 @@
 local key_tmr=3
 local key_int=50
---key1_pin=3  -- GPIO0 "MODE"
---key1_on=gpio.LOW
---key2_pin=8  -- GPIO15 "SELECT"
---key2_on=gpio.HIGH
 
 local key1_len=0
 local key2_len=0
@@ -33,15 +29,15 @@ tmr.alarm(key_tmr, key_int, 1, function()
    key1_len = key1_len + key_int
  else
   if key1_len >= 50 and key1_len < 300 then
-   play(125,20,"c")
+   beep(523) -- c
    modeset(1)
   elseif key1_len >= 300 and key1_len < 1000 then
-   play(125,20,"C")
+   beep(261) -- C
    modeset(-1)
 --  elseif key1_len >= 1000 and key1_len < 3000 then
---   play(250,20,"G")
+--   play(250,20,"G
   elseif key1_len >= 3000 then
-   play(500,20,"F")
+   beep(349,500) -- F
    node.restart()
   end
   key1_len=0
@@ -52,16 +48,16 @@ tmr.alarm(key_tmr, key_int, 1, function()
    key2_len = key2_len + key_int
  else
   if key2_len >= 50 and key2_len < 300 then
-   play(125,20,"e")
-   modes[status.mode+1](1)
+   beep(659) -- e
+   modekey(1)
   elseif key2_len >= 300 and key2_len < 1000 then
-   play(125,20,"E")
-   modes[status.mode+1](-1)
+   beep(329) -- E
+   modekey(-1)
   elseif key2_len >= 1000 and key2_len < 3000 then
-   play(125,20,"G")
-   modes[status.mode+1](0)
+   beep(391) -- G
+   modekey(0)
 --  elseif key2_len >= 3000 then
---   play(125,20,"b")
+--   b
   end
   key2_len=0
  end

@@ -48,3 +48,7 @@ flash:	nodemcu-master-25-modules-2016-06-04-14-47-40-integer.bin esptool/esptool
 flash_nodemcu_dev: esptool/esptool.py
 	$(ESPTOOL) write_flash 0x00000 0x00000.bin
 	$(ESPTOOL) write_flash 0x10000 0x10000.bin
+
+check:
+	@echo Sizes:
+	@wc -c *.lua | sort -n
