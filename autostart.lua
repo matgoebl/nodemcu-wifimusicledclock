@@ -48,6 +48,7 @@ dofile("http.lc")
 dofile("modes.lc")
 dofile("cfgedit.lc")
 dofile("twokeys.lc")
+dofile("mqtt.lc")
 
 rgb("770070")
 
@@ -72,14 +73,12 @@ tmr.alarm(tmp_tmr,8000,1, function()
  end
  rgb(p)
 
- dofile("mqtt.lc")
-
  tmr.alarm(tmp_tmr,10000,0, function()
   collectgarbage()
   modeset("clock")
   print("heap",node.heap())
  end)
 
- pcall(function() dofile("user.lua") end)
-
 end)
+
+pcall(function() dofile("user.lua") end)

@@ -1,28 +1,28 @@
-modes={"clock","melody","rgb"}
+modes={"clock","timer","melody","rgb"}
 mod_tmr=1
 
 local mod=nil
 
 function modeset(n,no_start)
- local newmode=nil
  tmr.stop(mod_tmr)
+ tmr.stop(tmp_tmr)
  if mod ~= nil then
   mod.stop()
   mod=nil
  end
  collectgarbage()
+ if not n then return end
  if type(n) == "number" then
   status.mode = (status.mode + n + #modes) % #modes
-  newmode = modes[status.mode+1]
  end
  if type(n) == "string" then
   for k,v in pairs(modes) do
    if v == n then
-    newmode = n
+    status.mode = k-1
    end
   end
  end
- if newmode == nil then return end
+ local newmode = modes[status.mode+1]
  mod=dofile(newmode..".lc")
  if not no_start then mod.start() end
 end
