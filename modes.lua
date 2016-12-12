@@ -1,7 +1,7 @@
 modes={"clock","timer","melody","rgb"}
 mod_tmr=1
 
-local mod=nil
+mod=nil
 
 function modeset(n,no_start)
  tmr.stop(mod_tmr)
@@ -25,6 +25,7 @@ function modeset(n,no_start)
  local newmode = modes[status.mode+1]
  mod=dofile(newmode..".lc")
  if not no_start then mod.start() end
+ return mod
 end
 
 function modekey(n)

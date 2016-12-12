@@ -34,5 +34,5 @@ function download_files(filelist,count)
  end
 end
 
-file.remove('autostart.lua')
+file.open("autostart.lua","w+") file.write('dofile("update.lua")') file.close()
 download_files(update_files,#update_files)

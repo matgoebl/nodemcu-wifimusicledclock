@@ -15,7 +15,7 @@ local wifi_outage=0
 
 local owtemp_int = 5000
 
-local ldr_pin=5 -- GPIO14
+ldr_pin=5 -- GPIO14
 local ldr_t0=0
 local ldr_int = 2000
 

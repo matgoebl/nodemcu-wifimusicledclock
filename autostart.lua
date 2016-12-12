@@ -16,7 +16,7 @@ function rgb(s)
  ws2812.write(rgbstr(s)..string.char(0,0,0):rep(rgb_max))
 end
 
-local beep_pin=2 -- GPIO4
+beep_pin=2 -- GPIO4
 beep_tmr=2
 function beep(freq,length,callback)
  if not freq then

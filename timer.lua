@@ -38,7 +38,9 @@ local function countdown()
  if count > 0 then
   show_timer()
  else
-  if timer_cb then timer_cb() end
+  if timer_cb then
+   if timer_cb() then return end
+  end
   local i=0
   tmr.alarm(mod_tmr, 500, 1, function()
    i=i+1
