@@ -24,7 +24,10 @@ function modeset(n,no_start)
  end
  local newmode = modes[status.mode+1]
  mod=dofile(newmode..".lc")
- if not no_start then mod.start() end
+ if not no_start then
+  rgb("000")
+  mod.start()
+ end
  return mod
 end
 
