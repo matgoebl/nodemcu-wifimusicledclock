@@ -41,6 +41,11 @@ local function countdown()
   if timer_cb then
    if timer_cb() then return end
   end
+  M.alarm()
+ end
+end
+
+function M.alarm()
   local i=0
   tmr.alarm(mod_tmr, 500, 1, function()
    i=i+1
@@ -52,7 +57,6 @@ local function countdown()
     beep(660,600)
    end
   end)
- end
 end
 
 function M.key(n)
