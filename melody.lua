@@ -73,6 +73,7 @@ local function play(s,p,m,b,i,o)
  if not f then f=0 end  -- pause if note not found
  -- print(f,d)
  if b == "1" then
+  local rgb_dim=cfg.leddim_day or 90
   local tp=t:upper():gsub("[XV]","")
   local tn=string.find("CDEFGAB",tp)
   if tn ~= nil then

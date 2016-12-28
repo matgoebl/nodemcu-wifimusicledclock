@@ -19,6 +19,7 @@ Hardware
  - GPIO2/D4: 24-led ws2812 via 330R
  - GPIO4/D2: Speaker to Vcc via 100R (optional)
  - GPIO12/D6: data pin of DS18B20 one-wire temperature sensor (optional)
+ - GPIO14/D5: RC-circuit with photo sensor: LDR to Vcc and 10uF to GND (optional)
 
 ![first two prototypes](wifimusicledclocks.jpg?raw=true "first two prototypes")
 

@@ -8,15 +8,22 @@ local rgb_buf=ws2812.newBuffer(rgb_max,3)
 rgb_buf:fill(0,0,0)
 
 local show_clock=function(h,m)
+ local is_night=false
+ local rgb_dim=cfg.leddim_day and tonumber(cfg.leddim_day) or 90
+ if cfg.leddim_threshold and status.ldr>tonumber(cfg.leddim_threshold) then
+  is_night=true
+  rgb_dim=cfg.leddim_night and tonumber(cfg.leddim_night) or 24
+ end
+
  rgb_buf:fill(0,0,0)
  local hp=(math.floor(h*rgb_max/12)+rgb_max/2)%rgb_max+1
  local mp=(math.floor(m*rgb_max/60)+rgb_max/2)%rgb_max+1
  if m>=30 then hp=hp+1 end
  for i=1,rgb_max,2 do
-  rgb_buf:set(i,2,0,0)
+  rgb_buf:set(i,is_night and 1 or 2,0,0)
  end
  for i=1,rgb_max,6 do
-  rgb_buf:set(i,16,0,0)
+  rgb_buf:set(i,is_night and 4 or 16,0,0)
  end
  if hp == mp then
   rgb_buf:set(hp,0,rgb_dim,rgb_dim)

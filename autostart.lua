@@ -5,7 +5,6 @@ tmp_tmr=0
 
 rgb_brights={0, 2, 3, 4, 6, 8, 11, 16, 23, 32, 45, 64, 90, 90, 90, 90} -- 128, 181, 255}
 rgb_max=cfg.lednum or 24
-rgb_dim=cfg.leddim or 90
 ws2812.init()
 function rgbstr(s)
  local t={}
