@@ -18,6 +18,7 @@ local owtemp_int = 5000
 ldr_pin=5 -- GPIO14
 local ldr_t0=0
 local ldr_int = 2000
+local ldr_max = ldr_int * 1000
 
 status.wifi_reconns = 0
 
@@ -85,7 +86,7 @@ tmr.alarm(key_tmr, key_int, 1, function()
  end
 
  if status.uptime_ms % ldr_int == 0 then
-  if ldr_t0 > 0 then status.ldr=-1 end
+  if ldr_t0 > 0 then status.ldr=ldr_max end
   gpio.trig(ldr_pin,"none")
   gpio.mode(ldr_pin,gpio.OUTPUT)
   gpio.write(ldr_pin,gpio.LOW)
