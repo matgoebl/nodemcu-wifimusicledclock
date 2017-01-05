@@ -1,7 +1,7 @@
 update_files={'cfgedit.lua','clock.lua','compile.lua','http.lua','melody.lua','modes.lua',
  'owtemp.lua','mqtt.lua','rgb.lua','twokeys.lua','wifiautoconnect.lua','timer.lua',
  'index.html','api.js','rgb.js','autostart.lua','init.lua','update.lua'}
-delete_files={'nettime.lc','user.lua'}
+delete_files={'nettime.lc'}
 -- normally excluded: 'config.lua','init.lua','update.lua','updater.lua'
 
 function download_files(filelist,count)
@@ -35,4 +35,5 @@ function download_files(filelist,count)
 end
 
 file.open("autostart.lua","w+") file.write('dofile("update.lua")') file.close()
+file.rename("user.lua","user.lua.old")
 download_files(update_files,#update_files)

@@ -52,6 +52,8 @@ Software
   `file.open("config.lua","w+") file.write('cfg={ssid="XXX",key="XXX"}') file.close()`
 - Force update by sending the following with with ESPlorer:
   `file.open("autostart.lua","w+") file.write('dofile("update.lua")') file.close() node.restart()`
+- After the update, re-enable your custom user-script:
+  `file.rename("user.lua.old","user.lua")'
 
 User Interface
 ==============
