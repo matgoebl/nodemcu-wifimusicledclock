@@ -11,17 +11,17 @@ a.palettec { display:inline-block; width:46px; height:40px; margin:0 4px 4px 0; 
 <h1><font face='arial,helvetica'>ESP8266</font></h1>
 <UL>
 <li>Mode:
- <button onclick='espAPI("mode?m=0")'>Clock</button>
- <button onclick='espAPI("mode?m=1")'>Music</button>
- <button onclick='espAPI("mode?m=2")'>RGB Running Light</button>
+ <button onclick='espAPI("mode?m=clock")'>Clock</button>
+ <button onclick='espAPI("mode?m=timer")'>Timer</button>
+ <button onclick='espAPI("mode?m=melody")'>Music</button>
+ <button onclick='espAPI("mode?m=rgb")'>RunningLight</button>
+ <button onclick='espAPI("mode?m=1")'>Next</button>
 <li>Function:
  <button onclick='espAPI("mode?n=1")'>Next</button>
  <button onclick='espAPI("mode?n=-1")'>Prev</button>
  <button onclick='espAPI("mode?n=0")'>Special</button>
 <li>Buzzer <button onclick='espAPI("melody?s=125&p=20&m=A")'>beep</button>
 <li>Melodies:
-<button onclick='espAPI("melody?s=125&p=20&m=A4A4A4F3c1.A4F3c1A8.e4e4e4f3c1,XG4F3c1A8.a4A3A1a4xg2g.xffxf2z2XA2xd4d2xc2.c1B1c2z2F1XG4F3A1.c4A3c1e8.a4A3A1a4xg2g,xffxf2z2XA2xd4d2xc2.cBc2z2FXG4F3c.A4F3cA8.&b="+(document.getElementById("melody_blink").checked?"1":"0"))'>Imperial March</button>
-<button onclick='espAPI("melody?s=125&p=20&m=C3C1D4C4F4E8.C3C1D4C4G4F8.C3C1c4A4F4E4D8.XA3XA1A4F4G4F8&b="+(document.getElementById("melody_blink").checked?"1":"0"))'>Happy Birthday</button>
 <button onclick='espAPI("melody?s=125&p=20&m=E4.G3E2EA2.E2D2.E4.B3E2Ec2.B2G2.E2B2.e2ED2DBV2.XF2E2&b="+(document.getElementById("melody_blink").checked?"1":"0"))'>AxelF</button>
 <input id='melody_blink' type='checkbox' onchange='updateRgb()' unchecked>blink
 <BR>Melody: <input id='melody' value='CDEFGABc' size=20>

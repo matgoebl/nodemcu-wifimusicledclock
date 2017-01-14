@@ -39,7 +39,7 @@ end
 
 function cmd.mode(p)
  if p.s then modeset(p.s) end
- if p.m then modeset(tonumber(p.m)) end
+ if p.m then modeset(tonumber(p.m) or p.m) end
  if p.n then modekey(tonumber(p.n)) end
  return true
 end
