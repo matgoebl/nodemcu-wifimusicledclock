@@ -40,7 +40,6 @@ local preset=0
 
 local rgb_buf=ws2812.newBuffer(rgb_max,3)
 rgb_buf:fill(0,0,0)
-rgb_buf:write()
 
 local function play(s,p,m,b,i,o)
  -- s: tone length  p: inter-tone pause  m: music string in abc format  b: visualize tones with rgb leds
@@ -111,6 +110,10 @@ function M.stop()
  beep(nil)
 end
 
-M.start=M.key
+M.start=function()
+ ws2812.init()
+ rgb_buf:write()
+ M.key()
+end
 
 return M

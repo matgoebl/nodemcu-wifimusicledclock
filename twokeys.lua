@@ -3,6 +3,8 @@ local key_int=50
 
 local key1_len=0
 local key2_len=0
+local key1_last=0
+local key1_fallback=10000
 status.mode=0
 status.uptime_ms=0
 
@@ -31,7 +33,11 @@ tmr.alarm(key_tmr, key_int, 1, function()
  else
   if key1_len >= 50 and key1_len < 300 then
    beep(523) -- c
-   modeset(1)
+   if status.mode ~= 0 and ( status.uptime_ms - key1_last >= key1_fallback or key1_last == -1 ) then
+    modeset("clock")
+   else
+    modeset(1)
+   end
   elseif key1_len >= 300 and key1_len < 1000 then
    beep(261) -- C
    modeset(-1)
@@ -40,6 +46,9 @@ tmr.alarm(key_tmr, key_int, 1, function()
   elseif key1_len >= 3000 then
    beep(349,500) -- F
    node.restart()
+  end
+  if key1_len > 0 then
+   key1_last = status.uptime_ms
   end
   key1_len=0
  end
@@ -59,6 +68,9 @@ tmr.alarm(key_tmr, key_int, 1, function()
    modekey(0)
 --  elseif key2_len >= 3000 then
 --   b
+  end
+  if key2_len > 0  then
+   key1_last = -1
   end
   key2_len=0
  end

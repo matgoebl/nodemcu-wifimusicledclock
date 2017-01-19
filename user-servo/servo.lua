@@ -60,6 +60,7 @@ local function servo(p,servo_fast)
 end
 
 function M.key(n)
+ rgb("111")
  if n == nil then
   servo(false)
   servo_down=false

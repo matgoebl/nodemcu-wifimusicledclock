@@ -31,7 +31,9 @@ local show_clock=function(h,m)
   rgb_buf:set(hp,0,rgb_dim,0)
   rgb_buf:set(mp,0,0,rgb_dim)
  end
+ ws2812.init()
  rgb_buf:write()
+ gpio.mode(rgb_pin,gpio.INPUT,gpio.FLOAT)
 end
 
 local update_clock=function()

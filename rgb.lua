@@ -19,7 +19,6 @@ local rgb_pattern=string.char(0):rep(3)
 
 local rgb_buf=ws2812.newBuffer(rgb_max,3)
 rgb_buf:fill(0,0,0)
-rgb_buf:write()
 
 local function rgb_update()
  collectgarbage()
@@ -80,6 +79,10 @@ function M.stop()
  tmr.stop(mod_tmr)
 end
 
-M.start=M.key
+M.start=function()
+ ws2812.init()
+ rgb_buf:write()
+ M.key()
+end
 
 return M

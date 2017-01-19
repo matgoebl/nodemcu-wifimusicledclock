@@ -30,7 +30,9 @@ local show_timer=function()
  else
   rgb_buf:set(cur,32,0,32)
  end
+ ws2812.init()
  rgb_buf:write()
+ gpio.mode(rgb_pin,gpio.INPUT,gpio.FLOAT)
 end
 
 local function countdown()

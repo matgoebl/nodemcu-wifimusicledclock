@@ -3,6 +3,7 @@ status={}
 status.version="3.1"
 tmp_tmr=0
 
+rgb_pin=4 -- GPIO2
 rgb_brights={0, 2, 3, 4, 6, 8, 11, 16, 23, 32, 45, 64, 90, 90, 90, 90} -- 128, 181, 255}
 rgb_max=cfg.lednum or 24
 ws2812.init()
@@ -12,7 +13,9 @@ function rgbstr(s)
  return table.concat(t)
 end
 function rgb(s)
+ ws2812.init()
  ws2812.write(rgbstr(s)..string.char(0,0,0):rep(rgb_max))
+ gpio.mode(rgb_pin,gpio.INPUT,gpio.FLOAT)
 end
 
 beep_pin=2 -- GPIO4
