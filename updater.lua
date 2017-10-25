@@ -1,6 +1,6 @@
 update_files={'cfgedit.lua','clock.lua','compile.lua','http.lua','melody.lua','modes.lua',
  'owtemp.lua','mqtt.lua','rgb.lua','twokeys.lua','wifiautoconnect.lua','timer.lua',
- 'index.html','api.js','rgb.js','autostart.lua','init.lua','update.lua'}
+ 'index.html','api.js','rgb.js','init.lua','update.lua','autostart.lua'}
 delete_files={'nettime.lc'}
 -- normally excluded: 'config.lua','init.lua','update.lua','updater.lua'
 

@@ -120,11 +120,13 @@ The gadget is able to upgrade itself directly from github using its [updater](ht
 Custom extension modules
 ========================
 The gadget allows custom extension modules in addition to its basic functionality.
+
 To add your own modules do the following:
 - Create and upload a file named `user.lua`: It is meant to register own modes and commands.
   - Please note: after an upgrade, the file will be renamed to `user.lua.old`.
   - In case of problems with custom modules you can perform an upgrade to disable it
 - Create and upload any number of module files.
+
 See [user.lua](https://github.com/matgoebl/nodemcu-wifimusicledclock/blob/master/user-servo/user.lua) for an example registration.
 
 Custom mode API
@@ -132,19 +134,23 @@ Custom mode API
 The `modes` table contains the list of usable modes, that can be toggled using the "MODE" key.
 The [default](https://github.com/matgoebl/nodemcu-wifimusicledclock/blob/master/modes.lua#L1) is
 `{"clock","timer","melody","rgb"}`.
+
 You can insert an custom modules by adding it there: `table.insert(modes,3,"servo")`
+
 When the mode _servo_ is started, the following happens:
  1. The file _servo_.lua is loaded.
  2. The code is expected to return a table containing at least a `start()` and `stop()` function (and optionally `key()`).
  3. The `start()` function is called.
  4. When the "SELECT" key is pressed, `key(n)` is called. n is set to 1 for short press ("next"), -1 for longer press ("prev"), 0 for long press ("special").
  5. Before changing to another mode `stop()` is called.
+
 See [servo.lua](https://github.com/matgoebl/nodemcu-wifimusicledclock/blob/master/user-servo/servo.lua) for an example user mode.
  
 
 Commands API
 ------------
 The global table `cmd` contains a map of available commands: The keys are their names, the values are functions.
+
 Example:
     function cmd.beep(p)
      beep(tonumber(p.f),tonumber(p.d))
@@ -171,6 +177,7 @@ The configuration is kept in a global table `cfg`, containing map of strings (nu
 It is read from `config.lua` at startup.
 You can add arbitrary configuration items.
 The config items can be changed with the command `cfg`, e.g. `GET http://ESPIP:8266/cfg?ssid=foo&key=bar` or `{"ssid":"foo","key":"bar"}` to `ESPMQTTID/cmd/cfg`.
+
 Current configuration parameters:
  - ssid
  - key

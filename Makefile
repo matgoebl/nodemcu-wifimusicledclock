@@ -8,7 +8,7 @@ ESPTOOL=python esptool/esptool.py --port=$(ESPDEV)
 install:
 	# autostart.lua at the end
 	# exclude: init.lua config.lua updater.lua
-	for i in cfgedit.lua clock.lua compile.lua http.lua melody.lua modes.lua mqtt.lua nettime.lua rgb.lua twokeys.lua update.lua wifiautoconnect.lua autostart.lua; do \
+	for i in cfgedit.lua clock.lua compile.lua http.lua melody.lua modes.lua mqtt.lua rgb.lua twokeys.lua update.lua wifiautoconnect.lua owtemp.lua timer.lua autostart.lua; do \
 	 luatool.py --ip $(ESPCONN) --auth "$(ESPAUTH)" --verbose --strip-whitespace --src $$i || exit 1; done
 	for i in index.html api.js rgb.js; do \
 	 luatool.py --ip $(ESPCONN) --auth "$(ESPAUTH)" --verbose --binary --src $$i; done
