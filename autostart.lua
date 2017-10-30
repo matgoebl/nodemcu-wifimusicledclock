@@ -4,7 +4,7 @@ status.version="3.1"
 tmp_tmr=0
 
 rgb_pin=4 -- GPIO2
-rgb_brights={0, 2, 3, 4, 6, 8, 11, 16, 23, 32, 45, 64, 90, 90, 90, 90} -- 128, 181, 255}
+rgb_brights={0, 2, 3, 4, 6, 8, 11, 16, 23, 32, 45, 64, 90, 128, 128, 128} -- 128, 181, 255}
 rgb_max=cfg.lednum or 24
 ws2812.init()
 function rgbstr(s)

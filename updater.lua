@@ -2,7 +2,7 @@ update_files={'cfgedit.lua','clock.lua','compile.lua','http.lua','melody.lua','m
  'owtemp.lua','mqtt.lua','rgb.lua','twokeys.lua','wifiautoconnect.lua','timer.lua',
  'index.html','api.js','rgb.js','init.lua','update.lua','autostart.lua'}
 delete_files={'nettime.lc'}
--- normally excluded: 'config.lua','init.lua','update.lua','updater.lua'
+-- normally excluded: 'config.lua','init.lua','update.lua','updater.lua','user.lua'
 
 function download_files(filelist,count)
  local remaining=#filelist
@@ -10,7 +10,7 @@ function download_files(filelist,count)
  print("count:",count-remaining,remaining)
  local filename=table.remove(filelist,1)
  if filename~=nil then
-  tmr.alarm(0, 1000, 0, function()
+  tmr.alarm(0, 100, 0, function()
    print("download:",update_base_url..filename)
    http.get(update_base_url..filename, nil, function(code,data)
     if (code ~= 200) then
