@@ -3,6 +3,7 @@ function cmd.cfg(p)
   cfg.ssid,cfg.key = wifi.sta.getconfig()
  end
  for k,v in pairs(p) do
+  if v == "" then v = nil end
   cfg[k] = v
  end
  if file.open("config.lua","w+") then
