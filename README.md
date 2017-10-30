@@ -200,3 +200,25 @@ Current configuration parameters:
  - leddim_threshold
  - returnmain
  - ntphost
+
+
+
+Memory Considerations
+=====================
+
+Unfortunately, TLS (for HTTPS and MQTT) is quite RAM (heap) consuming and ESP RAM is tight.
+
+
+Updater
+-------
+
+The updater fetches all lua scripts directly from github via HTTPS by default
+(see Makefile for a local upgrade)/
+It runs after a reboot, without any scripts running.
+Tests showed, that 17k heap is not enough for GET via HTTPS, but 34k works.
+
+The HTTP header size from github is about 840 bytes (tested at 2017-10-30 with curl).
+Processing a 7k https body temporarily reduces the heap by 16k.
+The maximum download size is slightly more than 7k, so taking 7k as maximum script size
+should be a save choice for a working update.
+Use `make sizecheck` to calculate script sizes.
