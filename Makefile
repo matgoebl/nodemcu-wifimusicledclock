@@ -4,6 +4,8 @@ ESPDEV?=/dev/ttyUSB0 #for WeMos D1: /dev/serial/by-id/usb-1a86_USB2.0-Serial-if0
 ESPAUTH?=""
 NODEMCUUPLOADER=python nodemcu-uploader/nodemcu-uploader.py --port=$(ESPDEV) --baud $(ESPBAUD) #--verbose
 ESPTOOL=python esptool/esptool.py --port=$(ESPDEV)
+ESPCURL=curl -H "ESPAUTH: $(ESPAUTH)" -s http://$(ESPCONN)
+HOSTIP?=192.168.0.1
 
 install:
 	# autostart.lua at the end
@@ -45,10 +47,20 @@ nodemcu-master-25-modules-2016-06-04-14-47-40-integer.bin:
 flash:	nodemcu-master-25-modules-2016-06-04-14-47-40-integer.bin esptool/esptool.py
 	$(ESPTOOL) write_flash 0x0 nodemcu-master-25-modules-2016-06-04-14-47-40-integer.bin
 
+erase:	esptool/esptool.py
+	$(ESPTOOL) erase_flash
+
 flash_nodemcu_dev: esptool/esptool.py
 	$(ESPTOOL) write_flash 0x00000 0x00000.bin
 	$(ESPTOOL) write_flash 0x10000 0x10000.bin
 
-check:
+sizecheck:
 	@echo Sizes:
 	@wc -c *.lua | sort -n
+
+localserve:
+	/usr/sbin/mini_httpd -p 8280 -l /dev/stdout -d . -D
+
+localupgrade:
+	$(ESPCURL)/cfg?updateurl=http://$(HOSTIP):8280/
+	$(ESPCURL)/upgrade
