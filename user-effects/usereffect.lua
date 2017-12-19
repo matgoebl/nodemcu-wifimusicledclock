@@ -2,13 +2,8 @@ local M={}
 
 local effect=0
 local colorpreset=0
-local effects=4
-local col_r=64
-local col_g=64
-local col_b=64
-local col2_r=16
-local col2_g=16
-local col2_b=16
+local effects=5
+local col_r,col_g,col_b,col2_r,col2_g,col2_b=128,0,0,0,0,128
 local fade=2
 local duration=-1
 local sound="0"

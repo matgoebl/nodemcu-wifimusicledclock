@@ -54,6 +54,7 @@ function M.alarm()
    if i%2==1 then
     rgb(string.rep("700",rgb_max))
     beep(880,600)
+    if i > 60 then tmr.stop(mod_tmr) end
    else
     rgb("000")
     beep(660,600)
